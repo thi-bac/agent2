@@ -1,0 +1,1554 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LIB Digital – Phân Tích Dữ Liệu, Tối Ưu Quy Trình &amp; Kiến Tạo Giải Pháp (Tone Hồng Pastel)</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <!-- SheetJS for XLSX parsing -->
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <!-- Google Fonts: Plus Jakarta Sans & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+          colors: {
+            pastel: {
+              salmon: '#F2A7AD',
+              mist: '#F2D0D3',
+              blossom: '#F2A2C0',
+              cream: '#F2D98D',
+              lightCanvas: '#F2E9E9',
+              canvas: '#FDF4F5',
+              softBorder: '#F5D5DA',
+              primary: '#E56988',
+              deep: '#DE527A',
+              darkText: '#3D1420',
+              mutedText: '#7A4B56',
+              cardBg: '#FFFFFF',
+              darkCard: '#2D121B'
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      background-color: #FDF4F5;
+      color: #3D1420;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      overflow-x: hidden;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 5px;
+      height: 5px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #F2A7AD;
+      border-radius: 9999px;
+    }
+    .clay-card {
+      background: #ffffff;
+      border: 1.5px solid #F5D5DA;
+      box-shadow: 0 8px 24px -4px rgba(222, 82, 122, 0.08);
+    }
+    .clay-sidebar-item {
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .clay-sidebar-item.active {
+      background-color: #F2D0D3;
+      border-color: #E56988;
+      color: #DE527A;
+      box-shadow: 0 4px 12px rgba(222, 82, 122, 0.15);
+    }
+    .clay-card-pink-dark {
+      background: #2D121B;
+      border: 1.5px solid rgba(242, 167, 173, 0.35);
+      box-shadow: 0 16px 40px -8px rgba(45, 18, 27, 0.5);
+    }
+    .hero-glow-pink {
+      position: absolute;
+      width: 450px;
+      height: 450px;
+      background: radial-gradient(circle, rgba(242, 162, 192, 0.3) 0%, rgba(253, 244, 245, 0) 70%);
+      pointer-events: none;
+      z-index: 1;
+    }
+  </style>
+</head>
+<body class="selection:bg-[#F2D0D3] selection:text-[#DE527A]">
+
+  <!-- ======================================================== -->
+  <!-- PHẦN 1: TRANG BÌA HERO (100% TONE HỒNG PASTEL - LIB DIGITAL) -->
+  <!-- ======================================================== -->
+  <section id="view-hero" class="relative min-h-screen flex flex-col justify-between px-6 sm:px-12 lg:px-16 py-6 border-b border-[#F5D5DA] bg-gradient-to-b from-[#FDF4F5] via-[#FAE9EC] to-[#FDF4F5] overflow-hidden">
+    
+    <div class="hero-glow-pink top-0 left-[-100px]"></div>
+    <div class="hero-glow-pink bottom-[-100px] right-[-100px]"></div>
+
+    <!-- Header Trang Bìa -->
+    <header class="w-full max-w-7xl mx-auto flex items-center justify-between pb-6 z-20">
+      <!-- Click vào Logo hoặc tên mở Modal Giới thiệu Doanh nghiệp -->
+      <div onclick="openModalAbout()" class="flex items-center space-x-3 cursor-pointer group">
+        <div class="w-10 h-10 rounded-2xl bg-[#E56988] group-hover:bg-[#DE527A] text-white flex items-center justify-center font-black text-lg shadow-md tracking-wider transition">
+          <i class="fa-solid fa-brain"></i>
+        </div>
+        <div>
+          <span class="text-base font-extrabold tracking-tight text-[#3D1420] group-hover:text-[#DE527A] flex items-center gap-1.5 transition">
+            LIB Digital
+            <span class="text-[10px] bg-[#F2D0D3] text-[#DE527A] px-2 py-0.5 rounded-full font-mono font-bold">LIB Web</span>
+          </span>
+          <span class="text-[10px] text-[#7A4B56] block font-medium">Enterprise Data Intelligence &amp; Multi-Agent System</span>
+        </div>
+      </div>
+
+      <!-- Menu Điều Hướng Trang Bìa (Đã bỏ Bảng Giá ERP 2026) -->
+      <nav class="hidden md:flex items-center space-x-6 text-xs font-semibold text-[#7A4B56]">
+        <button onclick="openModalAbout()" class="hover:text-[#DE527A] transition flex items-center gap-1">
+          Giới Thiệu Doanh Nghiệp
+        </button>
+        <button onclick="openModalServices()" class="hover:text-[#DE527A] transition flex items-center gap-1">
+          Dịch Vụ &amp; Giải Pháp
+        </button>
+        <button onclick="openModalContact()" class="hover:text-[#DE527A] transition flex items-center gap-1">
+          Liên Hệ Tư Vấn
+        </button>
+        <button onclick="openModalDoc()" class="hover:text-[#DE527A] transition">
+          Đề Bài AI301 (Task 1)
+        </button>
+      </nav>
+
+      <!-- Nút Khám Phá Giải Pháp -->
+      <div class="flex items-center space-x-3">
+        <button onclick="scrollToApp()" class="px-5 py-2.5 rounded-xl bg-[#E56988] hover:bg-[#DE527A] text-white font-bold text-xs shadow-md shadow-rose-300/40 transition flex items-center gap-1.5">
+          <span>Khám phá giải pháp</span>
+          <i class="fa-solid fa-arrow-right text-[10px]"></i>
+        </button>
+      </div>
+    </header>
+
+    <!-- Nội dung Hero -->
+    <div class="w-full max-w-7xl mx-auto my-auto grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center py-6 z-20">
+      
+      <div class="lg:col-span-6 space-y-6">
+        <div class="flex items-center space-x-2 text-[11px] font-mono tracking-widest text-[#7A4B56] uppercase">
+          <span class="w-2 h-2 rounded-full bg-[#E56988]"></span>
+          <span>HÀ NỘI, VIỆT NAM &bull; HỆ THỐNG ĐANG HOẠT ĐỘNG</span>
+        </div>
+
+        <div class="text-[12px] font-mono font-bold tracking-widest text-[#DE527A] uppercase">
+          LIB WEB &bull; PHÂN TÍCH DỮ LIỆU, TỐI ƯU QUY TRÌNH, KIẾN TẠO GIẢI PHÁP
+        </div>
+
+        <h1 class="text-4xl sm:text-5xl lg:text-[54px] font-black text-[#3D1420] tracking-tight leading-[1.14]">
+          Hệ thống doanh nghiệp, <br>
+          <span class="text-[#E56988]">do bạn làm chủ.</span>
+        </h1>
+
+        <p class="text-sm sm:text-base text-[#7A4B56] leading-relaxed max-w-xl">
+          <strong>Biến dữ liệu thành giá trị – Biến quy trình thủ công thành hệ thống tự động hóa.</strong> LIB Web là nền tảng ứng dụng AI hỗ trợ doanh nghiệp phân tích dữ liệu, xử lý thông tin và tối ưu quy trình vận hành thông qua kiến trúc Multi-Agent thông minh.
+        </p>
+
+        <div class="flex flex-wrap items-center gap-3 pt-2">
+          <!-- Nút bấm vào hệ thống 6 bước đổi tên thành: Khám phá giải pháp -->
+          <button onclick="scrollToApp()" class="px-6 py-3.5 rounded-2xl bg-[#E56988] hover:bg-[#DE527A] text-white font-bold text-sm shadow-lg shadow-rose-400/30 transition flex items-center gap-2 group">
+            <span>Khám phá giải pháp</span>
+            <i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition"></i>
+          </button>
+          
+          <button onclick="openModalServices()" class="px-5 py-3.5 rounded-2xl bg-white hover:bg-[#F2D0D3]/40 text-[#3D1420] border border-[#F5D5DA] font-bold text-sm shadow-xs transition">
+            Dịch Vụ &amp; Giải Pháp
+          </button>
+
+          <button onclick="openModalContact()" class="px-5 py-3.5 rounded-2xl bg-[#F2D0D3] hover:bg-[#ebc2c6] text-[#DE527A] font-bold text-sm shadow-xs transition">
+            Liên Hệ Tư Vấn
+          </button>
+        </div>
+      </div>
+
+      <!-- Khối Hộp Bên Phải: Hệ Thống Của Bạn (Tone Hồng Pastel Dark) -->
+      <div class="lg:col-span-6 relative">
+        <div class="clay-card-pink-dark rounded-3xl p-6 relative overflow-hidden text-white">
+          <div class="inline-block px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-[#E56988] text-white shadow-sm mb-4">
+            HỆ THỐNG CỦA BẠN &bull; LIB WEB
+          </div>
+
+          <div class="grid grid-cols-2 gap-3.5 relative z-10">
+            <div class="bg-[#3B1A24] p-3.5 rounded-2xl border border-rose-900/60 space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="font-bold text-xs text-white">Khách hàng</span>
+                <span class="w-2 h-2 rounded-full bg-[#F2A7AD]"></span>
+              </div>
+              <p class="text-[10px] text-rose-200/70">Dữ liệu của bạn</p>
+              <div class="space-y-1 pt-1 text-[10px] text-rose-100">
+                <div class="flex justify-between"><span>A. Alpha Corp</span><i class="fa-solid fa-check text-[9px] text-[#F2A7AD]"></i></div>
+                <div class="flex justify-between"><span>M. Minh An B2B</span><i class="fa-solid fa-check text-[9px] text-[#F2A7AD]"></i></div>
+                <div class="flex justify-between"><span>T. Thịnh Vượng</span><i class="fa-solid fa-check text-[9px] text-[#F2A7AD]"></i></div>
+              </div>
+            </div>
+
+            <div class="bg-[#3B1A24] p-3.5 rounded-2xl border border-rose-900/60 space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="font-bold text-xs text-white">Tự động hóa</span>
+                <span class="w-2 h-2 rounded-full bg-[#F2A7AD]"></span>
+              </div>
+              <p class="text-[10px] text-rose-200/70">Quy trình vận hành</p>
+              <div class="pt-2 flex items-center justify-between text-center text-[8px] text-rose-200">
+                <span>Đơn hàng</span>
+                <div class="h-0.5 flex-1 bg-[#E56988]/50 mx-1"></div>
+                <span>Hóa đơn</span>
+                <div class="h-0.5 flex-1 bg-[#E56988]/50 mx-1"></div>
+                <span>Thông báo</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="my-3 bg-[#3B1A24] p-3.5 rounded-2xl border border-rose-900/60 flex items-center justify-between">
+            <div>
+              <span class="text-xs font-bold text-white block">Website Kênh Khách Hàng</span>
+              <span class="text-[10px] text-rose-200/70">B2B E-Commerce &amp; Multi-Agent Portal</span>
+            </div>
+            <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-[#E56988] text-white">CỦA BẠN</span>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3.5">
+            <div class="bg-[#3B1A24] p-3.5 rounded-2xl border border-rose-900/60 space-y-1">
+              <span class="font-bold text-xs text-white block">AI Multi-Agent</span>
+              <p class="text-[9px] text-rose-200">"Đơn của mình tới đâu rồi?" &rarr; &check; Đã xử lý tự động</p>
+            </div>
+            <div class="bg-[#3B1A24] p-3.5 rounded-2xl border border-rose-900/60 space-y-1">
+              <span class="font-bold text-xs text-white block">Báo cáo P&amp;L</span>
+              <p class="text-[9px] text-rose-200">Biên lợi nhuận gộp chuẩn 23.8%</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Footer Trang Bìa -->
+    <div class="w-full max-w-7xl mx-auto pt-4 flex items-center justify-between text-[11px] text-[#7A4B56] border-t border-[#F5D5DA]">
+      <span>LIB DIGITAL PLATFORM &copy; 2026 &bull; MULTI-AGENT INTELLIGENCE</span>
+      <button onclick="scrollToApp()" class="font-bold text-[#DE527A] hover:underline flex items-center gap-1">
+        <span>Cuộn xuống Bảng Điều Khiển Quy Trình 6 Bước</span>
+        <i class="fa-solid fa-arrow-down"></i>
+      </button>
+    </div>
+
+  </section>
+
+
+  <!-- ========================================================================= -->
+  <!-- PHẦN 2: BẢNG ĐIỀU KHIỂN CHÍNH CÓ THANH BÊN TRÁI (QUY TRÌNH 6 BƯỚC)        -->
+  <!-- ========================================================================= -->
+  <section id="app-section" class="max-w-[1600px] mx-auto p-4 sm:p-6 lg:p-8">
+    
+    <div class="clay-card rounded-3xl p-4 sm:p-6 lg:p-8 grid grid-cols-1 lg:grid-cols-12 gap-6 bg-white min-h-[850px]">
+      
+      <!-- ==================== CỘT TRÁI (LEFT SIDEBAR THEO ĐÚNG ẢNH MẪU) ==================== -->
+      <aside class="lg:col-span-3 border-r border-[#F5D5DA] pr-0 lg:pr-6 flex flex-col justify-between space-y-6">
+        
+        <!-- Nhóm trên: Logo & Danh sách 6 Bước Giải Pháp -->
+        <div class="space-y-5">
+          
+          <!-- Brand Header ở Sidebar: Bấm vào mở Giới thiệu Doanh nghiệp -->
+          <div onclick="openModalAbout()" class="flex items-center space-x-3 pb-3 border-b border-[#F5D5DA] cursor-pointer group">
+            <div class="w-10 h-10 rounded-2xl bg-[#E56988] text-white flex items-center justify-center font-black text-sm shadow group-hover:bg-[#DE527A] transition">
+              <i class="fa-solid fa-brain"></i>
+            </div>
+            <div>
+              <div class="flex items-center gap-1.5">
+                <span class="font-black text-xs text-[#3D1420] group-hover:text-[#DE527A] transition">LIB Platform</span>
+                <span class="text-[9px] bg-[#F2D0D3] text-[#DE527A] px-1.5 py-0.5 rounded font-mono font-bold">B2B SaaS</span>
+              </div>
+              <span class="text-[10px] text-[#7A4B56] block">Enterprise Data Intelligence</span>
+            </div>
+          </div>
+
+          <!-- Tiêu đề Menu: QUY TRÌNH GIẢI PHÁP (6 BƯỚC) + Link Về Bìa Web -->
+          <div class="flex items-center justify-between text-xs font-bold">
+            <span class="text-[#7A4B56] font-mono uppercase tracking-wider text-[11px]">
+              QUY TRÌNH GIẢI PHÁP (6 BƯỚC)
+            </span>
+            <button onclick="scrollToHero()" class="text-[#DE527A] hover:underline text-[11px] font-semibold flex items-center gap-1">
+              &larr; Về Bìa Web
+            </button>
+          </div>
+
+          <!-- DANH SÁCH CÁC THẺ BƯỚC TRÊN THANH TRÁI (TONE HỒNG PASTEL) -->
+          <div class="space-y-2">
+            
+            <!-- Bước 1 -->
+            <button id="side-step-1" onclick="switchMainStep(1)" class="clay-sidebar-item active w-full p-3 rounded-2xl border border-[#F5D5DA] text-left flex items-center justify-between group">
+              <div class="flex items-center space-x-3">
+                <div class="w-8 h-8 rounded-xl bg-white/90 text-[#DE527A] flex items-center justify-center text-xs shadow-xs">
+                  <i class="fa-solid fa-cloud-arrow-up"></i>
+                </div>
+                <div>
+                  <div class="font-extrabold text-xs leading-tight">1. Tích hợp nguồn</div>
+                  <div class="text-[10px] text-[#7A4B56]">POS, ERP, Sàn, Sheets</div>
+                </div>
+              </div>
+              <span id="side-tick-1" class="text-xs font-bold text-[#DE527A]">&check;</span>
+            </button>
+
+            <!-- Bước 2 -->
+            <button id="side-step-2" onclick="switchMainStep(2)" class="clay-sidebar-item w-full p-3 rounded-2xl border border-[#F5D5DA] text-left flex items-center justify-between group bg-white hover:bg-[#FDF4F5]">
+              <div class="flex items-center space-x-3">
+                <div class="w-8 h-8 rounded-xl bg-[#FDF4F5] text-[#DE527A] flex items-center justify-center text-xs shadow-xs">
+                  <i class="fa-solid fa-wand-magic-sparkles"></i>
+                </div>
+                <div>
+                  <div class="font-extrabold text-xs leading-tight">2. Chuẩn hoá dữ liệu</div>
+                  <div class="text-[10px] text-[#7A4B56]">Định dạng, công thức, gian lận</div>
+                </div>
+              </div>
+              <span id="side-tick-2" class="text-xs font-bold text-[#DE527A] opacity-0">&check;</span>
+            </button>
+
+            <!-- Bước 3 -->
+            <button id="side-step-3" onclick="switchMainStep(3)" class="clay-sidebar-item w-full p-3 rounded-2xl border border-[#F5D5DA] text-left flex items-center justify-between group bg-white hover:bg-[#FDF4F5]">
+              <div class="flex items-center space-x-3">
+                <div class="w-8 h-8 rounded-xl bg-[#FDF4F5] text-[#DE527A] flex items-center justify-center text-xs shadow-xs">
+                  <i class="fa-solid fa-user-shield"></i>
+                </div>
+                <div>
+                  <div class="font-extrabold text-xs leading-tight">3. Chẩn đoán rủi ro</div>
+                  <div class="text-[10px] text-[#7A4B56]">SLA trễ, tồn ảo, HITL #1</div>
+                </div>
+              </div>
+              <span id="side-tick-3" class="text-xs font-bold text-[#DE527A] opacity-0">&check;</span>
+            </button>
+
+            <!-- Bước 4 -->
+            <button id="side-step-4" onclick="switchMainStep(4)" class="clay-sidebar-item w-full p-3 rounded-2xl border border-[#F5D5DA] text-left flex items-center justify-between group bg-white hover:bg-[#FDF4F5]">
+              <div class="flex items-center space-x-3">
+                <div class="w-8 h-8 rounded-xl bg-[#FDF4F5] text-[#DE527A] flex items-center justify-center text-xs shadow-xs">
+                  <i class="fa-solid fa-sliders"></i>
+                </div>
+                <div>
+                  <div class="font-extrabold text-xs leading-tight">4. Mô phỏng &amp; Duyệt luật</div>
+                  <div class="text-[10px] text-[#7A4B56]">HITL #1 &bull; Phân bổ &amp; Audit</div>
+                </div>
+              </div>
+              <span id="side-tick-4" class="text-xs font-bold text-[#DE527A] opacity-0">&check;</span>
+            </button>
+
+            <!-- Bước 5 -->
+            <button id="side-step-5" onclick="switchMainStep(5)" class="clay-sidebar-item w-full p-3 rounded-2xl border border-[#F5D5DA] text-left flex items-center justify-between group bg-white hover:bg-[#FDF4F5]">
+              <div class="flex items-center space-x-3">
+                <div class="w-8 h-8 rounded-xl bg-[#FDF4F5] text-[#DE527A] flex items-center justify-center text-xs shadow-xs">
+                  <i class="fa-solid fa-chart-pie"></i>
+                </div>
+                <div>
+                  <div class="font-extrabold text-xs leading-tight">5. Báo cáo &amp; Đề xuất</div>
+                  <div class="text-[10px] text-[#7A4B56]">5 Loại Dashboard &amp; P&amp;L</div>
+                </div>
+              </div>
+              <span id="side-tick-5" class="text-xs font-bold text-[#DE527A] opacity-0">&gt;</span>
+            </button>
+
+            <!-- Bước 6 -->
+            <button id="side-step-6" onclick="switchMainStep(6)" class="clay-sidebar-item w-full p-3 rounded-2xl border border-[#F5D5DA] text-left flex items-center justify-between group bg-white hover:bg-[#FDF4F5]">
+              <div class="flex items-center space-x-3">
+                <div class="w-8 h-8 rounded-xl bg-[#FDF4F5] text-[#DE527A] flex items-center justify-center text-xs shadow-xs">
+                  <i class="fa-solid fa-file-signature"></i>
+                </div>
+                <div>
+                  <div class="font-extrabold text-xs leading-tight">6. Người duyệt cuối</div>
+                  <div class="text-[10px] text-[#7A4B56]">HITL #2, Phê duyệt, Xuất HTML</div>
+                </div>
+              </div>
+              <span id="side-tick-6" class="text-xs font-bold text-[#DE527A] opacity-0">&gt;</span>
+            </button>
+
+          </div>
+
+        </div>
+
+        <!-- Khối dưới cùng của Sidebar: MÔ HÌNH DOANH NGHIỆP KHÁCH -->
+        <div class="p-3.5 rounded-2xl bg-[#FDF4F5] border border-[#F5D5DA] space-y-2">
+          <div class="flex items-center justify-between text-[11px] font-bold text-[#3D1420]">
+            <span>MÔ HÌNH DOANH NGHIỆP KHÁCH</span>
+            <span class="w-2 h-2 rounded-full bg-[#E56988]"></span>
+          </div>
+          
+          <select id="customer-model-select" onchange="changeCustomerModel()" class="w-full text-xs font-bold p-2 rounded-xl border border-[#F5D5DA] bg-white text-[#3D1420] outline-none">
+            <option value="minh-an">Công ty Công nghệ Minh An (B2B)</option>
+            <option value="omnichannel">Chuỗi Bán Lẻ Tiêu Dùng (Omnichannel)</option>
+            <option value="wholesale">Phân phối &amp; Bán buôn (Wholesale &amp; Distribution)</option>
+          </select>
+
+          <div class="text-[10px] text-[#7A4B56] flex justify-between pt-1">
+            <span>Chính sách kiểm soát:</span>
+            <span id="model-policy-tag" class="font-mono text-[#DE527A] font-bold">SLA 7d &bull; ERP 2026 AI</span>
+          </div>
+        </div>
+
+      </aside>
+
+
+      <!-- ==================== CỘT PHẢI (MAIN WORKSPACE THEO ĐÚNG ẢNH MẪU) ==================== -->
+      <main class="lg:col-span-9 flex flex-col justify-between space-y-6">
+        
+        <!-- Header chính của vùng làm việc: Báo cáo kinh doanh + Nút Xuất Báo Cáo (.csv/.html) -->
+        <div class="flex flex-wrap items-center justify-between gap-4 pb-3 border-b border-[#F5D5DA]">
+          <div>
+            <h1 class="text-2xl sm:text-3xl font-black text-[#3D1420] tracking-tight">
+              Báo cáo kinh doanh
+            </h1>
+            <p id="page-subtitle" class="text-xs text-[#7A4B56] mt-0.5">
+              Hệ thống phân tích đa kênh &bull; 1 tập dữ liệu chuẩn hóa &bull; Đã bóc tách giá niêm yết 2026 &amp; tồn kho thực tế
+            </p>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <button onclick="downloadHTMLReport()" class="px-4 py-2 bg-[#E56988] hover:bg-[#DE527A] text-white text-xs font-bold rounded-xl shadow-sm transition flex items-center gap-1.5">
+              <i class="fa-solid fa-file-code"></i> Xuất Báo Cáo (.html)
+            </button>
+            <button onclick="exportCSVData()" class="px-4 py-2 bg-white hover:bg-[#FDF4F5] border border-[#F5D5DA] text-[#DE527A] text-xs font-bold rounded-xl shadow-sm transition flex items-center gap-1.5">
+              <i class="fa-solid fa-file-csv"></i> Xuất Báo Cáo (.csv)
+            </button>
+          </div>
+        </div>
+
+        <!-- Thanh Tabs phụ ngang: Tóm tắt | Chỉ số chính | Phân tích chuyên đề | Kết luận và đề xuất | Nguồn & chất lượng -->
+        <div class="flex items-center space-x-6 text-xs border-b border-[#F5D5DA] overflow-x-auto pb-1">
+          <button id="subtab-1" onclick="switchSubtab('tom-tat')" class="subtab-btn font-bold text-[#DE527A] border-b-2 border-[#DE527A] pb-2">
+            Tóm tắt
+          </button>
+          <button id="subtab-2" onclick="switchSubtab('chi-so')" class="subtab-btn text-[#7A4B56] hover:text-[#3D1420] pb-2">
+            Chỉ số chính
+          </button>
+          <button id="subtab-3" onclick="switchSubtab('co-hoi')" class="subtab-btn text-[#7A4B56] hover:text-[#3D1420] pb-2">
+            Phân tích chuyên đề
+          </button>
+          <button id="subtab-4" onclick="switchSubtab('de-xuat')" class="subtab-btn text-[#7A4B56] hover:text-[#3D1420] pb-2">
+            Kết luận và đề xuất
+          </button>
+          <button id="subtab-5" onclick="switchSubtab('nguon-dl')" class="subtab-btn text-[#7A4B56] hover:text-[#3D1420] pb-2">
+            Nguồn và chất lượng dữ liệu
+          </button>
+        </div>
+
+        <!-- Khối Highlight: TÓM TẮT ĐIỀU HÀNH -->
+        <div class="p-4 sm:p-5 rounded-2xl bg-[#F2D0D3]/40 border border-[#F5D5DA] space-y-1.5">
+          <div class="text-[11px] font-bold uppercase tracking-wider text-[#DE527A]">
+            TÓM TẮT ĐIỀU HÀNH
+          </div>
+          <p id="exec-summary-text" class="text-xs text-[#3D1420] leading-relaxed">
+            Báo cáo tổng hợp đối soát hiệu quả kinh doanh B2B Công ty Minh An. Sau khi kích hoạt thuật toán khử nhiễu và đối soát Master ERP 2026 (loại bỏ 100% tình trạng bỏ sót linh kiện &amp; dùng giá cũ), kết quả cho thấy toàn bộ hệ thống tạo ra <strong class="text-[#DE527A]">599.580.000 ₫ doanh thu đề xuất</strong>, tỷ suất biên lợi nhuận gộp đạt chuẩn <strong class="text-[#DE527A]">23.8%</strong>, phát hiện 1 trường hợp vượt hạn mức chiết khấu cần Ban Giám Đốc phê duyệt.
+          </p>
+        </div>
+
+        <!-- 4 THẺ KPI CHÍNH NẰM NGANG THEO ĐÚNG ẢNH MẪU (TONE HỒNG PASTEL) -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3.5">
+          
+          <div class="p-4 rounded-2xl bg-white border border-[#F5D5DA] space-y-1 shadow-xs">
+            <div class="flex items-center justify-between text-[10px] text-[#7A4B56] font-bold">
+              <span>SỐ ĐƠN HÀNG THỰC TẾ</span>
+              <span id="kpi-orders-badge" class="px-1.5 py-0.5 rounded bg-[#F2D0D3] text-[#DE527A] font-mono text-[9px]">AUDITED</span>
+            </div>
+            <div class="text-2xl font-black text-[#3D1420]">
+              <span id="kpi-orders-count">8</span> <span class="text-xs font-semibold text-[#7A4B56]">đơn</span>
+            </div>
+            <div id="kpi-orders-sub" class="text-[10px] text-[#7A4B56]">8/8 đơn đạt chuẩn &bull; 0 đơn sót</div>
+          </div>
+
+          <div class="p-4 rounded-2xl bg-white border border-[#F5D5DA] space-y-1 shadow-xs">
+            <div class="flex items-center justify-between text-[10px] text-[#7A4B56] font-bold">
+              <span>DOANH THU SẠCH (NET)</span>
+              <span id="kpi-net-rev-badge" class="px-1.5 py-0.5 rounded bg-[#F2D0D3] text-[#DE527A] font-mono text-[9px]">CHUẨN 2026</span>
+            </div>
+            <div id="kpi-net-rev" class="text-xl font-black text-[#DE527A]">
+              599.580.000 ₫
+            </div>
+            <div id="kpi-net-rev-sub" class="text-[10px] text-[#7A4B56]">Bóc tách đúng giá niêm yết ERP</div>
+          </div>
+
+          <div class="p-4 rounded-2xl bg-white border border-[#F5D5DA] space-y-1 shadow-xs">
+            <div class="flex items-center justify-between text-[10px] text-[#7A4B56] font-bold">
+              <span>LỢI NHUẬN GỘP DỰ KIẾN</span>
+              <span id="kpi-net-profit-badge" class="px-1.5 py-0.5 rounded bg-[#F2D0D3] text-[#DE527A] font-mono text-[9px]">LÃI GỘP</span>
+            </div>
+            <div id="kpi-net-profit" class="text-xl font-black text-[#DE527A]">
+              +142.894.000 ₫
+            </div>
+            <div id="kpi-net-profit-sub" class="text-[10px] text-[#7A4B56]">Tỷ suất biên gộp: 23.8%</div>
+          </div>
+
+          <div class="p-4 rounded-2xl bg-white border border-[#F5D5DA] space-y-1 shadow-xs">
+            <div class="flex items-center justify-between text-[10px] text-[#7A4B56] font-bold">
+              <span id="kpi-ops-title">TỒN KHO &amp; TIẾN ĐỘ</span>
+              <span id="kpi-ops-badge" class="px-1.5 py-0.5 rounded bg-[#F2D0D3] text-[#DE527A] font-mono text-[9px]">100% CÂN BẰNG</span>
+            </div>
+            <div id="kpi-ops-status" class="text-xl font-black text-[#DE527A]">
+              100% Đủ Kho
+            </div>
+            <div id="kpi-ops-sub" class="text-[10px] text-[#7A4B56]">Cam kết SLA đúng năng lực</div>
+          </div>
+
+        </div>
+
+        <!-- BANNER PHÂN TÍCH ĐA CHIỀU (PASTEL COLORWAY · RETINA CRISP) -->
+        <div class="flex items-center justify-between pt-2">
+          <div class="flex items-center gap-2 text-xs font-bold text-[#3D1420]">
+            <span class="w-2.5 h-2.5 rounded-full bg-[#E56988]"></span>
+            <span>HỆ SINH THÁI PHÂN TÍCH ĐA CHIỀU (WATERFALL, STACKED BAR, PROFIT MARGIN, AUDIT TRAIL)</span>
+          </div>
+          <span class="px-2.5 py-1 rounded-full text-[9px] font-bold uppercase tracking-wider bg-[#F2D0D3] text-[#DE527A]">
+            PASTEL PINK COLORWAY &bull; RETINA CRISP
+          </span>
+        </div>
+
+
+        <!-- ==================== KHU VỰC THAO TÁC CỦA CÁC BƯỚC ==================== -->
+        
+        <!-- BƯỚC 1: TÍCH HỢP NGUỒN VÀ KIỂM TRA FILE -->
+        <div id="workspace-step-1" class="p-5 rounded-2xl bg-[#FDF4F5] border border-[#F5D5DA] space-y-4">
+          <div class="flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <strong class="text-sm font-extrabold text-[#3D1420]">Bước 1: Nạp Dữ Liệu &amp; Kiểm Duyệt Khóa Chính Bắt Buộc</strong>
+              <p class="text-[11px] text-[#7A4B56]">Hỗ trợ Google Sheets, file CSV, XLSX. Phát hiện và chặn lỗi nếu thiếu khóa chính.</p>
+            </div>
+            <div class="flex gap-2">
+              <button onclick="loadSample('valid')" class="px-3.5 py-1.5 bg-[#F2D0D3] hover:bg-[#e8bcc0] text-[#DE527A] font-bold text-xs rounded-xl transition">
+                Load File HỢP LỆ
+              </button>
+              <button onclick="loadSample('invalid')" class="px-3.5 py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 font-bold text-xs rounded-xl transition">
+                Load File LỖI (Test Error Đỏ)
+              </button>
+            </div>
+          </div>
+
+          <textarea id="raw-csv-input" rows="3" class="w-full text-xs font-mono p-3 border border-[#F5D5DA] rounded-xl bg-white focus:ring-2 focus:ring-[#E56988] outline-none" placeholder="request_id, customer_name, product_items, quantity, expected_budget, deadline, requested_discount..."></textarea>
+
+          <div class="flex items-center justify-between">
+            <span class="text-[10px] text-[#7A4B56]">Khóa chính: request_id, customer_name, product_items, quantity, expected_budget, deadline, requested_discount</span>
+            <button onclick="runStep1Validation()" class="px-5 py-2.5 bg-[#E56988] hover:bg-[#DE527A] text-white font-bold text-xs rounded-xl shadow transition">
+              Kiểm Duyệt Khóa Chính
+            </button>
+          </div>
+
+          <!-- ERROR CASE 2: CHỮ ERROR ĐỎ TO ĐÙNG MÀU ĐỎ THEO ĐÚNG YÊU CẦU CỦA BẠN -->
+          <div id="step-1-error-view" class="hidden p-5 rounded-2xl bg-rose-50 border-2 border-rose-500 text-rose-900 space-y-3">
+            <div class="flex items-center gap-3">
+              <span class="text-3xl animate-pulse">⚠️</span>
+              <h3 class="text-2xl font-black text-rose-700 tracking-tight">ERROR: DỮ LIỆU THIẾU HOẶC SAI ĐỊNH DẠNG KHÓA CHÍNH!</h3>
+            </div>
+            <p class="text-xs text-rose-800 font-semibold">
+              Hệ thống phát hiện tệp thiếu các khóa chính bắt buộc. Chặn không cho next sang bước tiếp theo nếu không đáp ứng yêu cầu và bắt buộc phải tải lại file!
+            </p>
+            <ul id="step-1-error-list" class="list-disc list-inside text-xs font-mono text-rose-800 bg-white p-2.5 rounded-xl border border-rose-300"></ul>
+            <button disabled class="px-4 py-2 bg-slate-300 text-slate-500 font-bold text-xs rounded-xl cursor-not-allowed">
+              ĐÃ BỊ KHÓA - KHÔNG THỂ NEXT SANG BƯỚC TIẾP THEO
+            </button>
+          </div>
+
+          <!-- SUCCESS CASE 1 -->
+          <div id="step-1-success-view" class="hidden p-4 rounded-2xl bg-[#F2D0D3]/80 border border-[#E56988] space-y-3">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold text-[#DE527A]">&check; File đạt chuẩn đầy đủ 7/7 khóa chính bắt buộc!</span>
+              <button onclick="switchMainStep(2)" class="px-4 py-1.5 bg-[#E56988] text-white font-bold text-xs rounded-xl hover:bg-[#DE527A]">
+                Sang Bước 2: Chuẩn Hóa Dữ Liệu &rarr;
+              </button>
+            </div>
+            <div class="max-h-36 overflow-y-auto border border-[#F5D5DA] rounded-xl bg-white">
+              <table class="w-full text-left text-[11px]">
+                <thead class="bg-[#FDF4F5] text-[#7A4B56] font-bold">
+                  <tr><th class="p-1.5">Mã YC</th><th class="p-1.5">Khách Hàng</th><th class="p-1.5">Sản Phẩm</th><th class="p-1.5">SL</th><th class="p-1.5">Ngân Sách</th><th class="p-1.5">Hạn</th><th class="p-1.5">CK</th></tr>
+                </thead>
+                <tbody id="step-1-preview-tbody" class="divide-y divide-[#F5D5DA]/60 font-mono"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- BƯỚC 2: CHUẨN HÓA DỮ LIỆU & MAP SKU -->
+        <div id="workspace-step-2" class="hidden p-5 rounded-2xl bg-[#FDF4F5] border border-[#F5D5DA] space-y-4">
+          <div class="flex items-center justify-between">
+            <strong class="text-sm font-extrabold text-[#3D1420]">Bước 2: AI Khử Nhiễu, Chuẩn Hóa Tiền Tệ &amp; Map SKU Master 2026</strong>
+            <button onclick="triggerAICleaning()" class="px-4 py-2 bg-[#E56988] hover:bg-[#DE527A] text-white font-bold text-xs rounded-xl shadow">
+              AI Chạy Lọc &amp; Khử Nhiễu
+            </button>
+          </div>
+          <div class="max-h-48 overflow-y-auto border border-[#F5D5DA] rounded-xl bg-white">
+            <table class="w-full text-left text-xs">
+              <thead class="bg-[#FDF4F5] text-[#7A4B56] font-bold sticky top-0">
+                <tr><th class="p-2">Mã YC</th><th class="p-2">Khách Hàng</th><th class="p-2">Tên Gốc</th><th class="p-2">SKU Chuẩn ERP 2026</th><th class="p-2">SL</th><th class="p-2">Ngân Sách</th><th class="p-2">CK</th></tr>
+              </thead>
+              <tbody id="step-2-cleaned-tbody" class="divide-y divide-[#F5D5DA]/60"></tbody>
+            </table>
+          </div>
+          <div class="flex justify-end">
+            <button onclick="switchMainStep(3)" class="px-5 py-2 bg-[#E56988] text-white font-bold text-xs rounded-xl shadow">
+              Chuyển Sang Bước 3: Chẩn Đoán &amp; Kiểm Toán &rarr;
+            </button>
+          </div>
+        </div>
+
+        <!-- BƯỚC 3: KIỂM TOÁN VÀ FEEDBACK HITL 1 -->
+        <div id="workspace-step-3" class="hidden p-5 rounded-2xl bg-[#FDF4F5] border border-[#F5D5DA] space-y-4">
+          <strong class="text-sm font-extrabold text-[#3D1420] block">Bước 3: Người Kiểm Duyệt 1 - Chẩn Đoán Rủi Ro &amp; Phản Hồi (HITL #1)</strong>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="p-4 rounded-2xl border border-[#F2A2C0] bg-white space-y-2.5">
+              <span class="text-xs font-bold text-[#DE527A] block">Trường hợp 1: Nếu Chưa Hài Lòng / Cần Sửa Đổi</span>
+              <textarea id="review-1-feedback-input" rows="2" class="w-full text-xs p-2.5 border border-[#F5D5DA] rounded-xl outline-none" placeholder="Ghi phản hồi để AI lọc lại..."></textarea>
+              <button onclick="submitReview1Feedback()" class="w-full py-2 bg-[#E56988] hover:bg-[#DE527A] text-white font-bold text-xs rounded-xl">
+                Gửi Feedback Để AI Lọc Lại &amp; Cập Nhật File
+              </button>
+            </div>
+            <div class="p-4 rounded-2xl border border-[#F2A2C0] bg-[#F2D0D3]/40 space-y-2.5 flex flex-col justify-between">
+              <span class="text-xs font-bold text-[#DE527A] block">Trường hợp 2: Nếu Dữ Liệu Đã Đạt Chuẩn (OK)</span>
+              <p class="text-xs text-[#7A4B56]">Xác nhận dữ liệu đạt chuẩn để chuyển tiếp sang mô hình phân tích sâu.</p>
+              <button onclick="approveReview1()" class="w-full py-2.5 bg-[#DE527A] hover:bg-[#c43c64] text-white font-bold text-xs rounded-xl shadow">
+                Xác Nhận OK &rarr; Chuyển Sang Bước 4
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- BƯỚC 4: MÔ PHỎNG VÀ PHÂN TÍCH SÂU -->
+        <div id="workspace-step-4" class="hidden p-5 rounded-2xl bg-[#FDF4F5] border border-[#F5D5DA] space-y-4">
+          <div class="flex items-center justify-between">
+            <strong class="text-sm font-extrabold text-[#3D1420]">Bước 4: AI Phân Tích Chuyên Sâu, Tính Chi Phí &amp; Báo Giá</strong>
+            <button onclick="runStep4Analysis()" class="px-4 py-2 bg-[#E56988] hover:bg-[#DE527A] text-white font-bold text-xs rounded-xl shadow">
+              Chạy Mô Hình Phân Tích
+            </button>
+          </div>
+          <p class="text-xs text-[#7A4B56]">
+            AI tra cứu bảng giá niêm yết 2026, tồn kho vận hành khả dụng, đối soát SLA giao hàng và phân luồng thẩm quyền duyệt chiết khấu.
+          </p>
+          <div class="flex justify-end">
+            <button onclick="switchMainStep(5)" class="px-5 py-2 bg-[#E56988] text-white font-bold text-xs rounded-xl shadow">
+              Xem Kết Quả Tại Bước 5 &rarr;
+            </button>
+          </div>
+        </div>
+
+        <!-- BƯỚC 5: DASHBOARD KẾT QUẢ & BIỂU ĐỒ TÀI CHÍNH TONE HỒNG PASTEL -->
+        <div id="workspace-step-5" class="p-5 rounded-2xl bg-[#FDF4F5] border border-[#F5D5DA] space-y-4">
+          <div class="flex items-center justify-between">
+            <div>
+              <strong class="text-sm font-extrabold text-[#3D1420] block">1. Biểu đồ Thác Nước Khấu Trừ Dòng Tiền &amp; Lợi Nhuận (Profit Waterfall Breakdown)</strong>
+              <p class="text-[11px] text-[#7A4B56] mt-0.5">Mô tả trực quan từ Doanh thu thô ban đầu &rarr; Bóc tách doanh thu trùng &rarr; Chiết khấu &rarr; Đổi trả trễ &rarr; Giá vốn COGS &rarr; Chi phí vận hành &rarr; Lợi nhuận ròng cuối cùng.</p>
+            </div>
+            <span class="px-2.5 py-1 rounded-full text-[9px] font-bold uppercase tracking-wider bg-[#F2D0D3] text-[#DE527A] font-mono whitespace-nowrap">
+              Waterfall Architecture
+            </span>
+          </div>
+
+          <div class="h-56 bg-white p-3 rounded-2xl border border-[#F5D5DA]">
+            <canvas id="profitabilityChart"></canvas>
+          </div>
+
+          <!-- Bảng hồ sơ cơ hội chi tiết -->
+          <div class="bg-white rounded-2xl border border-[#F5D5DA] overflow-hidden">
+            <div class="px-4 py-2.5 bg-[#FDF4F5] border-b border-[#F5D5DA] text-xs font-bold text-[#3D1420] flex justify-between">
+              <span>Danh Sách Đề Xuất Thương Mại Chi Tiết</span>
+              <span class="text-[#7A4B56] font-normal">Bấm "Xem Nháp" để đọc thư báo giá</span>
+            </div>
+            <div class="max-h-56 overflow-y-auto">
+              <table class="w-full text-left text-xs">
+                <thead class="bg-[#FDF4F5] text-[#7A4B56] font-bold">
+                  <tr><th class="p-2">Mã YC</th><th class="p-2">Khách Hàng</th><th class="p-2">Thiết Bị</th><th class="p-2">SL</th><th class="p-2">Giá Đề Xuất</th><th class="p-2">Biên LN</th><th class="p-2">Kho</th><th class="p-2">Tiến Độ</th><th class="p-2">Cấp Duyệt</th><th class="p-2 text-center">Bản Nháp</th></tr>
+                </thead>
+                <tbody id="step-5-results-tbody" class="divide-y divide-[#F5D5DA]/60 text-[#3D1420]"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Modal/Khung xem Bản nháp email -->
+          <div id="proposal-detail-card" class="hidden p-4 rounded-2xl bg-white border border-[#E56988] space-y-2">
+            <div class="flex justify-between items-center">
+              <span class="text-xs font-bold text-[#DE527A]">Bản Nháp Thư Báo Giá: <span id="detail-customer-title" class="text-[#3D1420]"></span></span>
+              <button onclick="document.getElementById('proposal-detail-card').classList.add('hidden')" class="text-xs text-[#7A4B56]">Đóng</button>
+            </div>
+            <pre id="detail-email-content" class="text-xs font-sans p-3 rounded-xl bg-[#FDF4F5] border border-[#F5D5DA] whitespace-pre-wrap max-h-40 overflow-y-auto"></pre>
+          </div>
+        </div>
+
+        <!-- BƯỚC 6: PHÊ DUYỆT VÀ XUẤT BẢN BÁO GIÁ HTML -->
+        <div id="workspace-step-6" class="hidden p-5 rounded-2xl bg-[#FDF4F5] border border-[#F5D5DA] space-y-4">
+          <strong class="text-sm font-extrabold text-[#3D1420] block">Bước 6: Người Kiểm Duyệt Cuối Cùng (HITL #2) - Phê Duyệt &amp; Xuất Báo Giá</strong>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="p-4 rounded-2xl border border-[#F2A2C0] bg-white space-y-2.5">
+              <span class="text-xs font-bold text-[#DE527A] block">Trường hợp 1: Nếu Chưa OK / Điều Chỉnh Tham Số</span>
+              <textarea id="review-2-feedback-input" rows="2" class="w-full text-xs p-2.5 border border-[#F5D5DA] rounded-xl outline-none" placeholder="Ghi chỉ đạo điều chỉnh tham số..."></textarea>
+              <button onclick="submitReview2Feedback()" class="w-full py-2 bg-[#E56988] hover:bg-[#DE527A] text-white font-bold text-xs rounded-xl">
+                Gửi Chỉ Đạo Để AI Tính Lại
+              </button>
+            </div>
+
+            <div class="p-4 rounded-2xl border border-[#F2A2C0] bg-[#F2D0D3]/40 space-y-2.5 flex flex-col justify-between">
+              <span class="text-xs font-bold text-[#DE527A] block">Trường hợp 2: Phê Duyệt Chính Thức &amp; Xuất Kết Quả</span>
+              <p class="text-xs text-[#7A4B56]">Xuất bản văn bản báo giá doanh nghiệp chuẩn mực có chữ ký số.</p>
+              <div class="flex gap-2">
+                <button onclick="openHTMLPreviewModal()" class="flex-1 py-2 bg-white border border-[#E56988] text-[#DE527A] font-bold text-xs rounded-xl shadow-xs">
+                  Xem Trước HTML
+                </button>
+                <button onclick="downloadHTMLReport()" class="flex-1 py-2 bg-[#DE527A] text-white font-bold text-xs rounded-xl shadow-sm">
+                  Tải File Báo Giá (.html)
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </main>
+
+    </div>
+
+  </section>
+
+
+  <!-- ======================================================== -->
+  <!-- MODAL 1: GIỚI THIỆU DOANH NGHIỆP LIB WEB                   -->
+  <!-- ======================================================== -->
+  <div id="modal-about" class="hidden fixed inset-0 z-50 bg-[#2D121B]/75 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white w-full max-w-3xl rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh] border border-[#F5D5DA]">
+      <div class="px-6 py-4 bg-[#FDF4F5] flex items-center justify-between border-b border-[#F5D5DA]">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-xl bg-[#E56988] text-white flex items-center justify-center text-xs font-bold">
+            <i class="fa-solid fa-brain"></i>
+          </div>
+          <div>
+            <h3 class="font-extrabold text-sm text-[#3D1420]">Giới Thiệu Doanh Nghiệp &bull; LIB Digital</h3>
+            <span class="text-[10px] text-[#7A4B56]">Kiến tạo giải pháp công nghệ thông minh</span>
+          </div>
+        </div>
+        <button onclick="closeModalAbout()" class="text-[#7A4B56] hover:text-[#3D1420] text-xl font-bold">&times;</button>
+      </div>
+
+      <div class="p-6 overflow-y-auto space-y-5 text-xs text-[#3D1420] leading-relaxed">
+        <div class="p-4 rounded-2xl bg-[#F2D0D3]/30 border border-[#F5D5DA] space-y-2">
+          <h2 class="text-base sm:text-lg font-black text-[#DE527A] uppercase tracking-wide">
+            LIB WEB – PHÂN TÍCH DỮ LIỆU, TỐI ƯU QUY TRÌNH, KIẾN TẠO GIẢI PHÁP THÔNG MINH
+          </h2>
+          <p class="font-bold text-xs text-[#3D1420]">
+            Biến dữ liệu thành giá trị – Biến quy trình thủ công thành hệ thống tự động hóa
+          </p>
+        </div>
+
+        <div class="space-y-3">
+          <p class="text-sm text-[#3D1420]">
+            <strong>LIB Web</strong> là nền tảng ứng dụng AI hỗ trợ doanh nghiệp phân tích dữ liệu, xử lý thông tin và tối ưu quy trình vận hành.
+          </p>
+          <p class="text-sm text-[#7A4B56]">
+            Thông qua kiến trúc <strong>Multi-Agent</strong>, LIB Web giúp doanh nghiệp kết nối dữ liệu từ nhiều nguồn, phân tích vấn đề, xác định điểm nghẽn và đề xuất giải pháp tự động hóa phù hợp.
+          </p>
+        </div>
+
+        <!-- 3 Trụ cột cốt lõi -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
+          <div class="p-3.5 rounded-2xl bg-[#FDF4F5] border border-[#F5D5DA] space-y-1">
+            <div class="w-7 h-7 rounded-lg bg-[#E56988] text-white flex items-center justify-center text-xs font-bold mb-2">
+              <i class="fa-solid fa-database"></i>
+            </div>
+            <strong class="text-xs font-bold text-[#DE527A] block">1. Phân Tích Dữ Liệu</strong>
+            <p class="text-[11px] text-[#7A4B56]">Kết nối đa nguồn dữ liệu, bóc tách doanh thu thực, khử trùng lặp và xây dựng Dashboard chuyên sâu.</p>
+          </div>
+
+          <div class="p-3.5 rounded-2xl bg-[#FDF4F5] border border-[#F5D5DA] space-y-1">
+            <div class="w-7 h-7 rounded-lg bg-[#DE527A] text-white flex items-center justify-center text-xs font-bold mb-2">
+              <i class="fa-solid fa-arrows-split-up-and-left"></i>
+            </div>
+            <strong class="text-xs font-bold text-[#DE527A] block">2. Tối Ưu Quy Trình</strong>
+            <p class="text-[11px] text-[#7A4B56]">Khảo sát As-Is, xóa bỏ điểm nghẽn ping-pong và thiết kế quy trình phối hợp To-Be chuẩn xác.</p>
+          </div>
+
+          <div class="p-3.5 rounded-2xl bg-[#FDF4F5] border border-[#F5D5DA] space-y-1">
+            <div class="w-7 h-7 rounded-lg bg-[#F2A2C0] text-[#3D1420] flex items-center justify-center text-xs font-bold mb-2">
+              <i class="fa-solid fa-robot"></i>
+            </div>
+            <strong class="text-xs font-bold text-[#DE527A] block">3. Multi-Agent AI</strong>
+            <p class="text-[11px] text-[#7A4B56]">Intake, Inventory, Policy &amp; Advisor Agents làm việc nhịp nhàng kết hợp cơ chế Human-in-the-loop.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="px-6 py-3.5 bg-[#FDF4F5] border-t border-[#F5D5DA] flex items-center justify-between">
+        <span class="text-[11px] text-[#7A4B56]">LIB Digital &bull; Own Your Systems</span>
+        <div class="flex gap-2">
+          <button onclick="closeModalAbout()" class="px-4 py-2 bg-white border border-[#F5D5DA] text-[#7A4B56] hover:text-[#3D1420] text-xs font-bold rounded-xl transition">
+            Đóng
+          </button>
+          <button onclick="closeModalAbout(); scrollToApp();" class="px-5 py-2 bg-[#E56988] hover:bg-[#DE527A] text-white text-xs font-bold rounded-xl shadow transition">
+            Khám phá giải pháp &rarr;
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ======================================================== -->
+  <!-- MODAL 2: DỊCH VỤ & GIẢI PHÁP CÔNG NGHỆ TỪ LIB WEB          -->
+  <!-- ======================================================== -->
+  <div id="modal-services" class="hidden fixed inset-0 z-50 bg-[#2D121B]/75 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white w-full max-w-4xl rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh] border border-[#F5D5DA]">
+      <div class="px-6 py-4 bg-[#FDF4F5] flex items-center justify-between border-b border-[#F5D5DA]">
+        <div>
+          <h3 class="font-extrabold text-sm text-[#3D1420]">GIẢI PHÁP CÔNG NGHỆ TỪ LIB WEB</h3>
+          <span class="text-[11px] font-bold text-[#DE527A]">Phân tích đúng vấn đề – Xây dựng đúng giải pháp</span>
+        </div>
+        <button onclick="closeModalServices()" class="text-[#7A4B56] hover:text-[#3D1420] text-xl font-bold">&times;</button>
+      </div>
+
+      <div class="p-6 overflow-y-auto space-y-4 text-xs text-[#3D1420]">
+        
+        <!-- 4 Dịch vụ chi tiết theo đúng yêu cầu -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          
+          <!-- Dịch vụ 1 -->
+          <div class="p-4 rounded-2xl bg-[#FDF4F5] border border-[#F5D5DA] space-y-2">
+            <div class="flex items-center gap-2">
+              <span class="w-6 h-6 rounded-lg bg-[#E56988] text-white flex items-center justify-center font-bold text-xs">1</span>
+              <strong class="text-xs font-black text-[#DE527A]">Phân tích dữ liệu doanh nghiệp</strong>
+            </div>
+            <ul class="space-y-1.5 text-[11px] text-[#7A4B56] pl-2">
+              <li class="flex items-start gap-1.5">&bull; <span>Thu thập và chuẩn hóa dữ liệu.</span></li>
+              <li class="flex items-start gap-1.5">&bull; <span>Kiểm tra chất lượng dữ liệu.</span></li>
+              <li class="flex items-start gap-1.5">&bull; <span>Phân tích doanh thu, khách hàng, sản phẩm và hiệu suất vận hành.</span></li>
+              <li class="flex items-start gap-1.5">&bull; <span>Xây dựng báo cáo và Dashboard.</span></li>
+              <li class="flex items-start gap-1.5">&bull; <span>Đưa ra nhận định và đề xuất cải thiện.</span></li>
+            </ul>
+          </div>
+
+          <!-- Dịch vụ 2 -->
+          <div class="p-4 rounded-2xl bg-[#FDF4F5] border border-[#F5D5DA] space-y-2">
+            <div class="flex items-center gap-2">
+              <span class="w-6 h-6 rounded-lg bg-[#DE527A] text-white flex items-center justify-center font-bold text-xs">2</span>
+              <strong class="text-xs font-black text-[#DE527A]">Tư vấn tối ưu quy trình</strong>
+            </div>
+            <ul class="space-y-1.5 text-[11px] text-[#7A4B56] pl-2">
+              <li class="flex items-start gap-1.5">&bull; <span>Khảo sát quy trình As-Is.</span></li>
+              <li class="flex items-start gap-1.5">&bull; <span>Xác định điểm nghẽn và nguyên nhân.</span></li>
+              <li class="flex items-start gap-1.5">&bull; <span>Đánh giá các bước có thể tự động hóa.</span></li>
+              <li class="flex items-start gap-1.5">&bull; <span>Thiết kế quy trình To-Be.</span></li>
+              <li class="flex items-start gap-1.5">&bull; <span>Phân công vai trò giữa AI Agent và nhân sự.</span></li>
+            </ul>
+          </div>
+
+          <!-- Dịch vụ 3 -->
+          <div class="p-4 rounded-2xl bg-[#FDF4F5] border border-[#F5D5DA] space-y-2">
+            <div class="flex items-center gap-2">
+              <span class="w-6 h-6 rounded-lg bg-[#F2A2C0] text-[#3D1420] flex items-center justify-center font-bold text-xs">3</span>
+              <strong class="text-xs font-black text-[#DE527A]">Xây dựng AI Agent</strong>
+            </div>
+            <ul class="space-y-1.5 text-[11px] text-[#7A4B56] pl-2">
+              <li class="flex items-start gap-1.5">&bull; <span><strong>Intake Agent:</strong> Tiếp nhận và phân loại thông tin.</span></li>
+              <li class="flex items-start gap-1.5">&bull; <span><strong>Inventory Agent:</strong> Đối soát tồn kho và giá bán.</span></li>
+              <li class="flex items-start gap-1.5">&bull; <span><strong>Policy Agent:</strong> Phân tích và thẩm định chính sách.</span></li>
+              <li class="flex items-start gap-1.5">&bull; <span><strong>Advisor Agent:</strong> Đề xuất phương án và tạo nội dung phản hồi.</span></li>
+            </ul>
+          </div>
+
+          <!-- Dịch vụ 4 -->
+          <div class="p-4 rounded-2xl bg-[#FDF4F5] border border-[#F5D5DA] space-y-2">
+            <div class="flex items-center gap-2">
+              <span class="w-6 h-6 rounded-lg bg-[#F2A7AD] text-[#3D1420] flex items-center justify-center font-bold text-xs">4</span>
+              <strong class="text-xs font-black text-[#DE527A]">Triển khai hệ thống Multi-Agent</strong>
+            </div>
+            <ul class="space-y-1.5 text-[11px] text-[#7A4B56] pl-2">
+              <li class="flex items-start gap-1.5">&bull; <span>Thiết kế kiến trúc nhiều Agent.</span></li>
+              <li class="flex items-start gap-1.5">&bull; <span>Kết nối dữ liệu và các công cụ nội bộ.</span></li>
+              <li class="flex items-start gap-1.5">&bull; <span>Thiết lập luồng phối hợp giữa các Agent.</span></li>
+              <li class="flex items-start gap-1.5">&bull; <span>Xây dựng cơ chế Human-in-the-loop.</span></li>
+              <li class="flex items-start gap-1.5">&bull; <span>Kiểm thử, triển khai và tối ưu hệ thống.</span></li>
+            </ul>
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="px-6 py-3.5 bg-[#FDF4F5] border-t border-[#F5D5DA] flex items-center justify-between">
+        <span class="text-[11px] text-[#7A4B56]">Cần giải pháp theo yêu cầu riêng?</span>
+        <div class="flex gap-2">
+          <button onclick="closeModalServices(); openModalContact();" class="px-4 py-2 bg-[#F2D0D3] text-[#DE527A] font-bold text-xs rounded-xl hover:bg-[#e8bcc0]">
+            Liên Hệ Tư Vấn Ngay
+          </button>
+          <button onclick="closeModalServices(); scrollToApp();" class="px-5 py-2 bg-[#E56988] hover:bg-[#DE527A] text-white font-bold text-xs rounded-xl shadow">
+            Khám phá giải pháp 6 bước &rarr;
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ======================================================== -->
+  <!-- MODAL 3: LIÊN HỆ & KẾT NỐI VỚI LIB WEB                     -->
+  <!-- ======================================================== -->
+  <div id="modal-contact" class="hidden fixed inset-0 z-50 bg-[#2D121B]/75 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white w-full max-w-3xl rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[92vh] border border-[#F5D5DA]">
+      <div class="px-6 py-4 bg-[#FDF4F5] flex items-center justify-between border-b border-[#F5D5DA]">
+        <div>
+          <h3 class="font-extrabold text-sm text-[#3D1420]">LIÊN HỆ &bull; KẾT NỐI VỚI LIB WEB</h3>
+          <span class="text-[11px] font-bold text-[#DE527A]">Chia sẻ bài toán – Nhận giải pháp phù hợp</span>
+        </div>
+        <button onclick="closeModalContact()" class="text-[#7A4B56] hover:text-[#3D1420] text-xl font-bold">&times;</button>
+      </div>
+
+      <div class="p-6 overflow-y-auto space-y-4 text-xs text-[#3D1420]">
+        
+        <p class="text-[#7A4B56] leading-relaxed">
+          Bạn đang gặp khó khăn trong quản lý dữ liệu, xử lý công việc hay kiểm soát quy trình vận hành? Hãy chia sẻ vấn đề doanh nghiệp đang gặp phải. <strong>LIB Web</strong> sẽ tiếp nhận thông tin, phân tích quy trình hiện tại và đề xuất phương án ứng dụng AI phù hợp.
+        </p>
+
+        <!-- Form thông tin liên hệ -->
+        <form id="contact-form" onsubmit="handleContactSubmit(event)" class="space-y-3">
+          
+          <div class="font-bold text-[#DE527A] uppercase text-[11px] pt-1">
+            1. THÔNG TIN LIÊN HỆ
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label class="block text-[11px] font-semibold text-[#7A4B56] mb-1">Họ và tên *</label>
+              <input type="text" required placeholder="Nguyễn Văn A" class="w-full p-2.5 rounded-xl border border-[#F5D5DA] bg-white outline-none focus:ring-2 focus:ring-[#E56988] text-xs">
+            </div>
+
+            <div>
+              <label class="block text-[11px] font-semibold text-[#7A4B56] mb-1">Chức vụ *</label>
+              <input type="text" required placeholder="Giám đốc / Trưởng phòng" class="w-full p-2.5 rounded-xl border border-[#F5D5DA] bg-white outline-none focus:ring-2 focus:ring-[#E56988] text-xs">
+            </div>
+
+            <div>
+              <label class="block text-[11px] font-semibold text-[#7A4B56] mb-1">Số điện thoại *</label>
+              <input type="tel" required placeholder="0912 345 678" class="w-full p-2.5 rounded-xl border border-[#F5D5DA] bg-white outline-none focus:ring-2 focus:ring-[#E56988] text-xs">
+            </div>
+
+            <div>
+              <label class="block text-[11px] font-semibold text-[#7A4B56] mb-1">Email *</label>
+              <input type="email" required placeholder="contact@doanhnghiep.com" class="w-full p-2.5 rounded-xl border border-[#F5D5DA] bg-white outline-none focus:ring-2 focus:ring-[#E56988] text-xs">
+            </div>
+
+            <div>
+              <label class="block text-[11px] font-semibold text-[#7A4B56] mb-1">Tên doanh nghiệp *</label>
+              <input type="text" required placeholder="Công ty TNHH Giải Pháp Việt" class="w-full p-2.5 rounded-xl border border-[#F5D5DA] bg-white outline-none focus:ring-2 focus:ring-[#E56988] text-xs">
+            </div>
+
+            <div>
+              <label class="block text-[11px] font-semibold text-[#7A4B56] mb-1">Website doanh nghiệp</label>
+              <input type="url" placeholder="https://doanhnghiep.com" class="w-full p-2.5 rounded-xl border border-[#F5D5DA] bg-white outline-none focus:ring-2 focus:ring-[#E56988] text-xs">
+            </div>
+          </div>
+
+          <div class="font-bold text-[#DE527A] uppercase text-[11px] pt-3">
+            2. NỘI DUNG TRAO ĐỔI VỀ BÀI TOÁN DOANH NGHIỆP
+          </div>
+
+          <div class="space-y-2.5">
+            <div>
+              <label class="block text-[11px] font-semibold text-[#7A4B56] mb-1">Vấn đề doanh nghiệp đang gặp phải *</label>
+              <textarea required rows="2" placeholder="Ví dụ: Bỏ sót đơn, lệch tồn kho, giá cũ, quy trình ping-pong..." class="w-full p-2.5 rounded-xl border border-[#F5D5DA] bg-white outline-none focus:ring-2 focus:ring-[#E56988] text-xs"></textarea>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label class="block text-[11px] font-semibold text-[#7A4B56] mb-1">Quy trình hiện tại &amp; Các bộ phận tham gia</label>
+                <input type="text" placeholder="Sales tiếp nhận &rarr; Kho tra cứu &rarr; Trưởng phòng duyệt" class="w-full p-2.5 rounded-xl border border-[#F5D5DA] bg-white outline-none focus:ring-2 focus:ring-[#E56988] text-xs">
+              </div>
+
+              <div>
+                <label class="block text-[11px] font-semibold text-[#7A4B56] mb-1">Công cụ &amp; Phần mềm đang sử dụng</label>
+                <input type="text" placeholder="Excel, Google Sheets, ERP, Email..." class="w-full p-2.5 rounded-xl border border-[#F5D5DA] bg-white outline-none focus:ring-2 focus:ring-[#E56988] text-xs">
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-[11px] font-semibold text-[#7A4B56] mb-1">Kết quả mong muốn đạt được</label>
+              <input type="text" placeholder="Tự động hóa báo giá 80%, giảm thời gian xử lý xuống dưới 2 giờ..." class="w-full p-2.5 rounded-xl border border-[#F5D5DA] bg-white outline-none focus:ring-2 focus:ring-[#E56988] text-xs">
+            </div>
+          </div>
+
+          <div class="pt-2">
+            <button type="submit" class="w-full py-3 bg-[#E56988] hover:bg-[#DE527A] text-white font-extrabold text-xs uppercase tracking-wider rounded-xl shadow-md transition">
+              [GỬI THÔNG TIN LIÊN HỆ]
+            </button>
+          </div>
+
+        </form>
+
+        <!-- THÔNG ĐIỆP THƯƠNG HIỆU -->
+        <div class="p-4 rounded-2xl bg-[#F2D0D3]/40 border border-[#F5D5DA] space-y-1.5 mt-4">
+          <strong class="text-xs font-black text-[#DE527A] uppercase tracking-wide block">
+            THÔNG ĐIỆP THƯƠNG HIỆU
+          </strong>
+          <p class="font-bold text-[11px] text-[#3D1420]">
+            LIB WEB – Phân tích dữ liệu. Tối ưu quy trình. Tự động hóa thông minh.
+          </p>
+          <p class="text-[11px] text-[#7A4B56] leading-relaxed">
+            Không chỉ ứng dụng AI, LIB Web hướng đến việc hiểu bài toán nghiệp vụ, khai thác dữ liệu và xây dựng hệ thống giải pháp phù hợp với hoạt động thực tế của doanh nghiệp.
+          </p>
+        </div>
+
+      </div>
+
+      <div class="px-6 py-3 bg-[#FDF4F5] border-t border-[#F5D5DA] flex justify-end">
+        <button onclick="closeModalContact()" class="px-4 py-1.5 bg-white border border-[#F5D5DA] text-[#7A4B56] text-xs font-bold rounded-xl">
+          Đóng
+        </button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ======================================================== -->
+  <!-- MODAL XEM TRƯỚC BÁO GIÁ HTML                              -->
+  <!-- ======================================================== -->
+  <div id="html-preview-modal" class="hidden fixed inset-0 z-50 bg-[#2D121B]/75 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white w-full max-w-4xl rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh] border border-[#F5D5DA]">
+      <div class="px-6 py-4 bg-[#FDF4F5] flex items-center justify-between border-b border-[#F5D5DA]">
+        <div class="flex items-center gap-2">
+          <i class="fa-solid fa-file-invoice text-[#DE527A]"></i>
+          <span class="text-xs font-extrabold text-[#3D1420]">Báo Giá Doanh Nghiệp LIB Web (Định Dạng HTML Xuất Bản)</span>
+        </div>
+        <button onclick="closeHTMLPreviewModal()" class="text-[#7A4B56] hover:text-[#3D1420] text-xl font-bold">&times;</button>
+      </div>
+
+      <div class="p-4 overflow-y-auto flex-1 bg-[#FDF4F5]" id="html-preview-rendered-area"></div>
+
+      <div class="px-6 py-3 bg-white border-t border-[#F5D5DA] flex items-center justify-between">
+        <span class="text-[11px] text-[#7A4B56]">Văn bản chính thức đính kèm chữ ký số Giám đốc.</span>
+        <button onclick="downloadHTMLReport()" class="px-4 py-2 bg-[#E56988] hover:bg-[#DE527A] text-white text-xs font-bold rounded-xl shadow">
+          Tải File HTML Về Máy
+        </button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ======================================================== -->
+  <!-- MODAL XEM PHÂN TÍCH TASK 1 (ĐỀ BÀI AI301)                -->
+  <!-- ======================================================== -->
+  <div id="modal-doc" class="hidden fixed inset-0 z-50 bg-[#2D121B]/75 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white w-full max-w-3xl rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[85vh] border border-[#F5D5DA] p-6 space-y-4">
+      <div class="flex justify-between items-center border-b border-[#F5D5DA] pb-3">
+        <h3 class="font-extrabold text-sm text-[#3D1420]">Phân Tích Hiện Trạng &amp; Thiết Kế Hệ Thống (Task 1 AI301)</h3>
+        <button onclick="document.getElementById('modal-doc').classList.add('hidden')" class="text-lg font-bold text-[#7A4B56]">&times;</button>
+      </div>
+      <div class="overflow-y-auto space-y-3 text-xs leading-relaxed text-[#3D1420]">
+        <p><strong>1. Ba Vấn Đề Cốt Lõi:</strong> Bỏ sót hạng mục; Áp dụng giá cũ và trễ hạn; Chuyển qua lại vô định (ping-pong effect).</p>
+        <p><strong>2. Ba Bước Tự Động Bằng AI:</strong> B2 Chuẩn hóa dữ liệu; B4a Tra cứu tồn kho &amp; SLA; B4b Tính giá và soạn thư báo giá.</p>
+        <p><strong>3. Hai Điểm Chốt Con Người (HITL):</strong> Chốt 1 (B3) Kiểm toán dữ liệu; Chốt 2 (B6) Phê duyệt thương mại.</p>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ======================================================== -->
+  <!-- SCRIPT LOGIC TOÀN BỘ HỆ THỐNG                            -->
+  <!-- ======================================================== -->
+  <script>
+    const MASTER_CATALOG = {
+      products: [
+        { sku: "SRV-R750", name: "Dell PowerEdge R750 Server", unit_price: 98000000, unit_cost: 72000000, stock_available: 8, lead_time_days: 3 },
+        { sku: "PC-OPT-7090", name: "Dell OptiPlex 7090 Desktop", unit_price: 22500000, unit_cost: 17500000, stock_available: 25, lead_time_days: 2 },
+        { sku: "SW-CISCO-2960", name: "Cisco Catalyst 2960-X Switch 24P", unit_price: 28900000, unit_cost: 21000000, stock_available: 12, lead_time_days: 5 },
+        { sku: "FW-FORTI-60F", name: "Fortinet FortiGate 60F Firewall", unit_price: 18500000, unit_cost: 13800000, stock_available: 10, lead_time_days: 2 },
+        { sku: "LIC-MS365-BUS", name: "Microsoft 365 Business Standard (1Y)", unit_price: 3600000, unit_cost: 3100000, stock_available: 999, lead_time_days: 1 },
+        { sku: "SRV-HPE-DL380", name: "HPE ProLiant DL380 Gen10 Server", unit_price: 105000000, unit_cost: 80000000, stock_available: 4, lead_time_days: 4 }
+      ],
+      required_keys: [
+        { key: "request_id", aliases: ["request_id", "mã yêu cầu", "ma_yc", "id"] },
+        { key: "customer_name", aliases: ["customer_name", "khách hàng", "ten_khach", "khach_hang"] },
+        { key: "product_items", aliases: ["product_items", "sản phẩm", "hang_muc", "san_pham"] },
+        { key: "quantity", aliases: ["quantity", "số lượng", "so_luong", "sl"] },
+        { key: "expected_budget", aliases: ["expected_budget", "ngân sách", "budget", "ngan_sach"] },
+        { key: "deadline", aliases: ["deadline", "thời hạn", "ngay_giao", "han_trien_khai"] },
+        { key: "requested_discount", aliases: ["requested_discount", "chiết khấu", "chiet_khau", "discount"] }
+      ]
+    };
+
+    const SAMPLE_VALID_CSV = `request_id,customer_name,product_items,quantity,expected_budget,deadline,requested_discount
+REQ-2026-001,Tập đoàn Công nghệ Alpha,Dell PowerEdge R750 Server,2,210000000,5 ngày,5%
+REQ-2026-002,Ngân hàng TMCP Việt Á,dell opti 7090,15,320000000,7 ngày,8%
+REQ-2026-003,Công ty Bất động sản Thịnh Vượng,switch cisco 24p,4,115000000,3 ngày,4%
+REQ-2026-004,Tập đoàn Dược phẩm An Bình,fortigate 60f,2,38000000,2 ngày,0%
+REQ-2026-005,Học viện Tài chính Số,license m365 bus,50,175000000,1 ngày,3%
+REQ-2026-006,Chuỗi Bán lẻ SmartRetail,HPE ProLiant DL380 Server,1,110000000,4 ngày,5%
+REQ-2026-007,Tổng Công ty Logistics Sao Vàng,dell r750 server,3,300000000,6 ngày,6%
+REQ-2026-008,Tập đoàn Viễn thông Hải Đăng,cisco catalyst 2960 switch,8,220000000,7 ngày,12%`;
+
+    const SAMPLE_INVALID_CSV = `request_id,customer_name,product_items,notes
+REQ-ERR-101,Tập đoàn Thất Lạc,Dell Server R750,File thiếu ngân sách và hạn giao
+REQ-ERR-102,Doanh nghiệp Vội Vã,Cisco Switch 24P,Không có cột số lượng và chiết khấu`;
+
+    let AppState = {
+      currentStep: 1,
+      validData: [],
+      cleanData: [],
+      results: [],
+      summary: null,
+      chart: null
+    };
+
+    function scrollToApp() {
+      document.getElementById('app-section').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function scrollToHero() {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Modal Handlers
+    function openModalAbout() { document.getElementById('modal-about').classList.remove('hidden'); }
+    function closeModalAbout() { document.getElementById('modal-about').classList.add('hidden'); }
+
+    function openModalServices() { document.getElementById('modal-services').classList.remove('hidden'); }
+    function closeModalServices() { document.getElementById('modal-services').classList.add('hidden'); }
+
+    function openModalContact() { document.getElementById('modal-contact').classList.remove('hidden'); }
+    function closeModalContact() { document.getElementById('modal-contact').classList.add('hidden'); }
+
+    function openModalDoc() { document.getElementById('modal-doc').classList.remove('hidden'); }
+
+    function handleContactSubmit(e) {
+      e.preventDefault();
+      alert("Cảm ơn bạn! LIB Web đã tiếp nhận thông tin yêu cầu của doanh nghiệp. Đội ngũ chuyên gia sẽ liên hệ tư vấn trong vòng 2 giờ.");
+      closeModalContact();
+    }
+
+    function formatVND(n) {
+      return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(n);
+    }
+
+    // ĐIỀU KHIỂN MÔ HÌNH DOANH NGHIỆP KHÁCH (TONE HỒNG PASTEL)
+    function changeCustomerModel() {
+      const select = document.getElementById('customer-model-select');
+      const val = select ? select.value : 'minh-an';
+      const policyTag = document.getElementById('model-policy-tag');
+      const execSummary = document.getElementById('exec-summary-text');
+      const subtitle = document.getElementById('page-subtitle');
+
+      if (val === 'omnichannel') {
+        if (policyTag) policyTag.innerText = 'SLA 12d nội bộ → Quét 30d AI';
+        if (subtitle) subtitle.innerText = 'Hệ thống phân tích đa kênh · 1 tập dữ liệu chuẩn hóa · Đã bóc tách 298.13M đ doanh thu ảo';
+        if (execSummary) execSummary.innerHTML = 'Báo cáo tổng hợp đối soát hiệu quả kinh doanh đa kênh. Sau khi kích hoạt thuật toán khử trùng lặp đa chạm (loại bỏ 298.13M đ doanh thu ảo) và quét hoàn trả trễ theo cửa sổ 30 ngày (phát hiện thêm 72.57M đ hàng trả muộn), kết quả cho thấy toàn hệ thống âm ròng <strong class="text-rose-600">-14.894.000 đ</strong>. Khuyến nghị ngừng ngay Kênh Flash Sale để cắt lỗ và điều chuyển 48M đ sang Kênh Khai Xuân có ROI cao nhất.';
+        const kpiOrders = document.getElementById('kpi-orders-count'); if (kpiOrders) kpiOrders.innerText = '220';
+        const kpiOrdersSub = document.getElementById('kpi-orders-sub'); if (kpiOrdersSub) kpiOrdersSub.innerText = '96 đơn đa chạm · 0 đơn gian lận';
+        const kpiOrdersBadge = document.getElementById('kpi-orders-badge'); if (kpiOrdersBadge) kpiOrdersBadge.innerText = 'AUDITED';
+        const kpiNetRev = document.getElementById('kpi-net-rev'); if (kpiNetRev) kpiNetRev.innerText = '599.580.000 ₫';
+        const kpiNetRevSub = document.getElementById('kpi-net-rev-sub'); if (kpiNetRevSub) kpiNetRevSub.innerText = 'Bóc tách 298.13M đ doanh thu ảo';
+        const kpiNetRevBadge = document.getElementById('kpi-net-rev-badge'); if (kpiNetRevBadge) kpiNetRevBadge.innerText = '-33.2%';
+        const kpiNetProfit = document.getElementById('kpi-net-profit');
+        if (kpiNetProfit) {
+          kpiNetProfit.innerText = '-14.894.000 ₫';
+          kpiNetProfit.className = 'text-xl font-black text-rose-600';
+        }
+        const kpiProfitBadge = document.getElementById('kpi-net-profit-badge');
+        if (kpiProfitBadge) {
+          kpiProfitBadge.innerText = 'ÂM RÒNG';
+          kpiProfitBadge.className = 'px-1.5 py-0.5 rounded bg-rose-100 text-rose-700 font-mono text-[9px]';
+        }
+        const kpiProfitSub = document.getElementById('kpi-net-profit-sub'); if (kpiProfitSub) kpiProfitSub.innerText = 'Tỷ suất biên ròng -3.5% (Cần điều chỉnh)';
+        const kpiOps = document.getElementById('kpi-ops-status'); if (kpiOps) kpiOps.innerText = '193.500.000 ₫';
+        const kpiOpsTitle = document.getElementById('kpi-ops-title'); if (kpiOpsTitle) kpiOpsTitle.innerText = 'TỔNG CHI PHÍ VẬN HÀNH';
+        const kpiOpsSub = document.getElementById('kpi-ops-sub'); if (kpiOpsSub) kpiOpsSub.innerText = 'Gồm 113.5M trực tiếp + 80M chung';
+        const kpiOpsBadge = document.getElementById('kpi-ops-badge'); if (kpiOpsBadge) kpiOpsBadge.innerText = '100% CÂN BẰNG';
+      } else if (val === 'wholesale') {
+        if (policyTag) policyTag.innerText = 'SLA 15d nội bộ → Quét Chiết Khấu Bậc Thang';
+        if (subtitle) subtitle.innerText = 'Hệ thống phân phối B2B · Bóc tách công nợ & chiết khấu đại lý cấp 1';
+        if (execSummary) execSummary.innerHTML = 'Báo cáo đối soát kênh phân phối và đại lý cấp 1. Sau khi áp dụng chính sách chiết khấu bậc thang theo sản lượng quý, hệ thống tự động cảnh báo 3 đại lý vi phạm hạn mức công nợ và giữ nguyên chiết khấu tiêu chuẩn 8%.';
+        const kpiOrders = document.getElementById('kpi-orders-count'); if (kpiOrders) kpiOrders.innerText = '145';
+        const kpiOrdersSub = document.getElementById('kpi-orders-sub'); if (kpiOrdersSub) kpiOrdersSub.innerText = '12 đại lý trọng điểm · 0 đơn tranh chấp';
+        const kpiOrdersBadge = document.getElementById('kpi-orders-badge'); if (kpiOrdersBadge) kpiOrdersBadge.innerText = 'AUDITED';
+        const kpiNetRev = document.getElementById('kpi-net-rev'); if (kpiNetRev) kpiNetRev.innerText = '1.840.000.000 ₫';
+        const kpiNetRevSub = document.getElementById('kpi-net-rev-sub'); if (kpiNetRevSub) kpiNetRevSub.innerText = 'Doanh số đại lý ròng chuẩn hóa';
+        const kpiNetRevBadge = document.getElementById('kpi-net-rev-badge'); if (kpiNetRevBadge) kpiNetRevBadge.innerText = '+18.5%';
+        const kpiNetProfit = document.getElementById('kpi-net-profit');
+        if (kpiNetProfit) {
+          kpiNetProfit.innerText = '+368.000.000 ₫';
+          kpiNetProfit.className = 'text-xl font-black text-[#DE527A]';
+        }
+        const kpiProfitBadge = document.getElementById('kpi-net-profit-badge');
+        if (kpiProfitBadge) {
+          kpiProfitBadge.innerText = 'LÃI RÒNG';
+          kpiProfitBadge.className = 'px-1.5 py-0.5 rounded bg-[#F2D0D3] text-[#DE527A] font-mono text-[9px]';
+        }
+        const kpiProfitSub = document.getElementById('kpi-net-profit-sub'); if (kpiProfitSub) kpiProfitSub.innerText = 'Biên lợi nhuận phân phối: 20.0%';
+        const kpiOps = document.getElementById('kpi-ops-status'); if (kpiOps) kpiOps.innerText = '285.000.000 ₫';
+        const kpiOpsTitle = document.getElementById('kpi-ops-title'); if (kpiOpsTitle) kpiOpsTitle.innerText = 'CHI PHÍ KHO & LOGISTICS';
+        const kpiOpsSub = document.getElementById('kpi-ops-sub'); if (kpiOpsSub) kpiOpsSub.innerText = 'Tối ưu 15% cước vận chuyển';
+        const kpiOpsBadge = document.getElementById('kpi-ops-badge'); if (kpiOpsBadge) kpiOpsBadge.innerText = 'TIẾT KIỆM';
+      } else {
+        if (policyTag) policyTag.innerText = 'SLA 7d nội bộ • ERP 2026 AI';
+        if (subtitle) subtitle.innerText = 'Hệ thống phân tích đa kênh • 1 tập dữ liệu chuẩn hóa • Đã bóc tách giá niêm yết 2026 & tồn kho thực tế';
+        if (execSummary) execSummary.innerHTML = 'Báo cáo tổng hợp đối soát hiệu quả kinh doanh B2B Công ty Minh An. Sau khi kích hoạt thuật toán khử nhiễu và đối soát Master ERP 2026 (loại bỏ 100% tình trạng bỏ sót linh kiện & dùng giá cũ), kết quả cho thấy toàn bộ hệ thống tạo ra <strong class="text-[#DE527A]">599.580.000 ₫ doanh thu đề xuất</strong>, tỷ suất biên lợi nhuận gộp đạt chuẩn <strong class="text-[#DE527A]">23.8%</strong>, phát hiện 1 trường hợp vượt hạn mức chiết khấu cần Ban Giám Đốc phê duyệt.';
+        const kpiOrders = document.getElementById('kpi-orders-count'); if (kpiOrders) kpiOrders.innerText = '8';
+        const kpiOrdersSub = document.getElementById('kpi-orders-sub'); if (kpiOrdersSub) kpiOrdersSub.innerText = '8/8 đơn đạt chuẩn · 0 đơn sót';
+        const kpiOrdersBadge = document.getElementById('kpi-orders-badge'); if (kpiOrdersBadge) kpiOrdersBadge.innerText = 'AUDITED';
+        const kpiNetRev = document.getElementById('kpi-net-rev'); if (kpiNetRev) kpiNetRev.innerText = '599.580.000 ₫';
+        const kpiNetRevSub = document.getElementById('kpi-net-rev-sub'); if (kpiNetRevSub) kpiNetRevSub.innerText = 'Bóc tách đúng giá niêm yết ERP';
+        const kpiNetRevBadge = document.getElementById('kpi-net-rev-badge'); if (kpiNetRevBadge) kpiNetRevBadge.innerText = 'CHUẨN 2026';
+        const kpiNetProfit = document.getElementById('kpi-net-profit');
+        if (kpiNetProfit) {
+          kpiNetProfit.innerText = '+142.894.000 ₫';
+          kpiNetProfit.className = 'text-xl font-black text-[#DE527A]';
+        }
+        const kpiProfitBadge = document.getElementById('kpi-net-profit-badge');
+        if (kpiProfitBadge) {
+          kpiProfitBadge.innerText = 'LÃI GỘP';
+          kpiProfitBadge.className = 'px-1.5 py-0.5 rounded bg-[#F2D0D3] text-[#DE527A] font-mono text-[9px]';
+        }
+        const kpiProfitSub = document.getElementById('kpi-net-profit-sub'); if (kpiProfitSub) kpiProfitSub.innerText = 'Tỷ suất biên gộp: 23.8%';
+        const kpiOps = document.getElementById('kpi-ops-status'); if (kpiOps) kpiOps.innerText = '100% Đủ Kho';
+        const kpiOpsTitle = document.getElementById('kpi-ops-title'); if (kpiOpsTitle) kpiOpsTitle.innerText = 'TỒN KHO & TIẾN ĐỘ';
+        const kpiOpsSub = document.getElementById('kpi-ops-sub'); if (kpiOpsSub) kpiOpsSub.innerText = 'Cam kết SLA đúng năng lực';
+        const kpiOpsBadge = document.getElementById('kpi-ops-badge'); if (kpiOpsBadge) kpiOpsBadge.innerText = '100% CÂN BẰNG';
+      }
+    }
+
+    // CHUYỂN BƯỚC BẰNG THANH BÊN TRÁI
+    function switchMainStep(s) {
+      if (s > 1 && AppState.validData.length === 0) {
+        loadSample('valid');
+      }
+      AppState.currentStep = s;
+
+      for (let i = 1; i <= 6; i++) {
+        const sideBtn = document.getElementById('side-step-' + i);
+        const sideTick = document.getElementById(`side-tick-${i}`);
+        const wsBox = document.getElementById(`workspace-step-${i}`);
+
+        if (sideBtn) {
+          if (i === s) {
+            sideBtn.className = "clay-sidebar-item active w-full p-3 rounded-2xl border border-[#E56988] bg-[#F2D0D3] text-[#DE527A] text-left flex items-center justify-between shadow-xs";
+          } else {
+            sideBtn.className = "clay-sidebar-item w-full p-3 rounded-2xl border border-[#F5D5DA] text-left flex items-center justify-between bg-white hover:bg-[#FDF4F5] text-[#3D1420]";
+          }
+        }
+        if (wsBox) wsBox.classList.toggle('hidden', i !== s);
+      }
+
+      if (s === 2 && AppState.cleanData.length === 0) triggerAICleaning();
+      if (s === 4 && AppState.results.length === 0) runStep4Analysis();
+      if (s === 5) renderStep5Results();
+    }
+
+    function switchSubtab(tabName) {
+      document.querySelectorAll('.subtab-btn').forEach(btn => {
+        btn.className = "subtab-btn text-[#7A4B56] hover:text-[#3D1420] pb-2";
+      });
+      event.target.className = "subtab-btn font-bold text-[#DE527A] border-b-2 border-[#DE527A] pb-2";
+
+      if (tabName === 'tom-tat' || tabName === 'chi-so') switchMainStep(5);
+      else if (tabName === 'nguon-dl') switchMainStep(1);
+      else if (tabName === 'de-xuat') switchMainStep(6);
+      else switchMainStep(4);
+    }
+
+    function loadSample(t) {
+      document.getElementById('raw-csv-input').value = (t === 'valid') ? SAMPLE_VALID_CSV : SAMPLE_INVALID_CSV;
+      runStep1Validation();
+    }
+
+    function runStep1Validation() {
+      const txt = document.getElementById('raw-csv-input').value.trim();
+      if (!txt) return;
+
+      const lines = txt.split(/\r?\n/).filter(l => l.trim().length > 0);
+      const headers = lines[0].split(',').map(h => h.trim().toLowerCase());
+
+      const missing = [];
+      MASTER_CATALOG.required_keys.forEach(k => {
+        let match = false;
+        for (let al of k.aliases) {
+          if (headers.includes(al)) { match = true; break; }
+        }
+        if (!match) missing.push(k);
+      });
+
+      const errBox = document.getElementById('step-1-error-view');
+      const succBox = document.getElementById('step-1-success-view');
+
+      if (missing.length > 0) {
+        errBox.classList.remove('hidden');
+        succBox.classList.add('hidden');
+        document.getElementById('step-1-error-list').innerHTML = missing.map(m => `
+          <li>Thiếu khoá chính: <strong class="text-rose-900">${m.key}</strong> (các tên cột chấp nhận: ${m.aliases.join(', ')})</li>
+        `).join('');
+        AppState.validData = [];
+      } else {
+        errBox.classList.add('hidden');
+        succBox.classList.remove('hidden');
+        AppState.validData = [];
+
+        for (let i = 1; i < lines.length; i++) {
+          const cols = lines[i].split(',').map(c => c.trim());
+          if (cols.length >= 7) {
+            AppState.validData.push({
+              request_id: cols[0],
+              customer_name: cols[1],
+              product_items: cols[2],
+              quantity: parseInt(cols[3]) || 1,
+              expected_budget: cols[4],
+              deadline: cols[5],
+              requested_discount: cols[6]
+            });
+          }
+        }
+
+        document.getElementById('step-1-preview-tbody').innerHTML = AppState.validData.map(r => `
+          <tr>
+            <td class="p-1.5 font-bold text-[#DE527A]">${r.request_id}</td>
+            <td class="p-1.5">${r.customer_name}</td>
+            <td class="p-1.5">${r.product_items}</td>
+            <td class="p-1.5">${r.quantity}</td>
+            <td class="p-1.5">${r.expected_budget}</td>
+            <td class="p-1.5">${r.deadline}</td>
+            <td class="p-1.5">${r.requested_discount}</td>
+          </tr>
+        `).join('');
+
+        document.getElementById('side-tick-1').classList.remove('opacity-0');
+      }
+    }
+
+    function triggerAICleaning() {
+      AppState.cleanData = AppState.validData.map(item => {
+        const rawP = item.product_items.toLowerCase();
+        let matched = MASTER_CATALOG.products[0];
+        if (rawP.includes("opti") || rawP.includes("desktop")) matched = MASTER_CATALOG.products[1];
+        else if (rawP.includes("switch") || rawP.includes("cisco")) matched = MASTER_CATALOG.products[2];
+        else if (rawP.includes("forti") || rawP.includes("firewall")) matched = MASTER_CATALOG.products[3];
+        else if (rawP.includes("365") || rawP.includes("license")) matched = MASTER_CATALOG.products[4];
+        else if (rawP.includes("hpe") || rawP.includes("dl380")) matched = MASTER_CATALOG.products[5];
+
+        let budgetClean = parseInt(String(item.expected_budget).replace(/[^\d]/g, '')) || (matched.unit_price * item.quantity);
+        let discClean = parseFloat(String(item.requested_discount).replace(/[^\d.]/g, '')) || 0;
+        let daysClean = parseInt(String(item.deadline).replace(/[^\d]/g, '')) || 5;
+
+        return {
+          ...item,
+          sku: matched.sku,
+          prod_std: matched.name,
+          unit_price: matched.unit_price,
+          unit_cost: matched.unit_cost,
+          stock_available: matched.stock_available,
+          lead_time_days: matched.lead_time_days,
+          budget_clean: budgetClean,
+          disc_clean: discClean,
+          deadline_days: daysClean
+        };
+      });
+
+      document.getElementById('step-2-cleaned-tbody').innerHTML = AppState.cleanData.map(r => `
+        <tr>
+          <td class="p-2 font-mono font-bold text-[#DE527A]">${r.request_id}</td>
+          <td class="p-2 font-medium">${r.customer_name}</td>
+          <td class="p-2 text-[#7A4B56]">${r.product_items}</td>
+          <td class="p-2 font-bold text-[#DE527A]">${r.prod_std} (${r.sku})</td>
+          <td class="p-2">${r.quantity}</td>
+          <td class="p-2 font-bold">${formatVND(r.budget_clean)}</td>
+          <td class="p-2">${r.disc_clean}%</td>
+        </tr>
+      `).join('');
+
+      document.getElementById('side-tick-2').classList.remove('opacity-0');
+    }
+
+    function submitReview1Feedback() {
+      const fb = document.getElementById('review-1-feedback-input').value.trim();
+      if (!fb) return;
+      alert(`AI đã đọc phản hồi: "${fb}". Đã cập nhật và lọc lại bộ dữ liệu!`);
+      triggerAICleaning();
+      document.getElementById('review-1-feedback-input').value = "";
+    }
+
+    function approveReview1() {
+      document.getElementById('side-tick-3').classList.remove('opacity-0');
+      switchMainStep(4);
+    }
+
+    function runStep4Analysis() {
+      if (AppState.cleanData.length === 0) triggerAICleaning();
+
+      let totRev = 0, totCost = 0, shortages = 0, leadtimeAlerts = 0;
+
+      AppState.results = AppState.cleanData.map(item => {
+        const listPrice = item.unit_price * item.quantity;
+        const discountAmt = listPrice * (item.disc_clean / 100);
+        const finalQuote = listPrice - discountAmt;
+        const totalCost = item.unit_cost * item.quantity;
+        const profit = finalQuote - totalCost;
+        const margin = Math.round((profit / finalQuote) * 100);
+
+        const stockOk = item.stock_available >= item.quantity;
+        if (!stockOk) shortages++;
+
+        const delOk = item.deadline_days >= item.lead_time_days;
+        if (!delOk) leadtimeAlerts++;
+
+        let app = "Sales Rep duyệt";
+        if (item.disc_clean > 10) app = "Ban Giám Đốc duyệt (Vượt quyền)";
+        else if (item.disc_clean > 5) app = "Trưởng phòng KD duyệt";
+
+        totRev += finalQuote;
+        totCost += totalCost;
+
+        const email = `Kính gửi Quý khách ${item.customer_name},\n\nCông ty chúng tôi xin trân trọng gửi đề xuất thương mại cho yêu cầu ${item.request_id}:\n- Thiết bị: ${item.prod_std} (${item.sku})\n- Số lượng: ${item.quantity} chiếc\n- Đơn giá niêm yết: ${formatVND(item.unit_price)}\n- Chiết khấu áp dụng: ${item.disc_clean}%\n- Tổng giá trị đề xuất: ${formatVND(finalQuote)} (Đã duyệt bởi: ${app})\n- Tiến độ cam kết: ${item.lead_time_days} ngày làm việc (${stockOk ? "Hàng sẵn trong kho" : "Cần điều chuyển"})\n\nTrân trọng cảm ơn Quý khách!`;
+
+        return {
+          ...item,
+          listPrice,
+          finalQuote,
+          totalCost,
+          profit,
+          margin,
+          stockOk,
+          delOk,
+          app,
+          email
+        };
+      });
+
+      AppState.summary = { totRev, totCost, shortages, leadtimeAlerts };
+      document.getElementById('side-tick-4').classList.remove('opacity-0');
+      renderStep5Results();
+    }
+
+    function renderStep5Results() {
+      if (!AppState.summary) return;
+      const s = AppState.summary;
+      document.getElementById('kpi-orders-count').textContent = AppState.results.length;
+      document.getElementById('kpi-net-rev').textContent = formatVND(s.totRev);
+      document.getElementById('kpi-net-profit').textContent = `+${formatVND(s.totRev - s.totCost)}`;
+      document.getElementById('kpi-ops-status').textContent = s.shortages === 0 ? "100% Đủ Kho" : `${s.shortages} thiếu kho`;
+      document.getElementById('side-tick-5').classList.remove('opacity-0');
+
+      document.getElementById('step-5-results-tbody').innerHTML = AppState.results.map((r, idx) => `
+        <tr class="hover:bg-[#FDF4F5]">
+          <td class="p-2 font-bold text-[#DE527A]">${r.request_id}</td>
+          <td class="p-2">${r.customer_name}</td>
+          <td class="p-2">${r.prod_std}</td>
+          <td class="p-2 font-bold">${r.quantity}</td>
+          <td class="p-2 font-bold">${formatVND(r.finalQuote)}</td>
+          <td class="p-2 font-bold text-[#DE527A]">${r.margin}%</td>
+          <td class="p-2"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${r.stockOk ? 'bg-[#F2D0D3] text-[#DE527A]' : 'bg-rose-100 text-rose-800'}">${r.stockOk ? 'Đủ kho' : 'Thiếu'}</span></td>
+          <td class="p-2"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${r.delOk ? 'bg-[#F2D0D3] text-[#DE527A]' : 'bg-rose-100 text-rose-800'}">${r.delOk ? 'Đúng hạn' : 'Trễ hạn'}</span></td>
+          <td class="p-2 text-[10px] font-semibold">${r.app}</td>
+          <td class="p-2 text-center">
+            <button onclick="viewProposalDraft(${idx})" class="px-2 py-0.5 rounded bg-[#F2D0D3] text-[#DE527A] font-bold text-[10px]">Xem Nháp</button>
+          </td>
+        </tr>
+      `).join('');
+
+      initChart();
+    }
+
+    function viewProposalDraft(idx) {
+      const item = AppState.results[idx];
+      document.getElementById('detail-customer-title').textContent = `${item.customer_name} (${item.request_id})`;
+      document.getElementById('detail-email-content').textContent = item.email;
+      document.getElementById('proposal-detail-card').classList.remove('hidden');
+    }
+
+    function initChart() {
+      const ctx = document.getElementById('profitabilityChart');
+      if (!ctx) return;
+      if (AppState.chart) AppState.chart.destroy();
+
+      const labels = AppState.results.map(r => r.request_id);
+      const revs = AppState.results.map(r => r.finalQuote / 1000000);
+      const profits = AppState.results.map(r => r.profit / 1000000);
+
+      AppState.chart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: [
+            { label: 'Doanh Số Đề Xuất (Triệu ₫)', data: revs, backgroundColor: '#F2A2C0', borderRadius: 6 },
+            { label: 'Lợi Nhuận Gộp (Triệu ₫)', data: profits, backgroundColor: '#E56988', borderRadius: 6 }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { labels: { boxWidth: 12, font: { size: 10, family: 'Plus Jakarta Sans' } } } },
+          scales: { x: { grid: { display: false } }, y: { grid: { color: '#F5D5DA' }, ticks: { callback: v => v + 'M' } } }
+        }
+      });
+    }
+
+    function submitReview2Feedback() {
+      const fb = document.getElementById('review-2-feedback-input').value.trim().toLowerCase();
+      if (!fb) return;
+      AppState.results.forEach(item => {
+        if (fb.includes(item.request_id.toLowerCase()) || fb.includes("toàn bộ")) {
+          if (fb.includes("tăng chiết khấu")) {
+            item.disc_clean += 2;
+            item.finalQuote = item.listPrice - (item.listPrice * (item.disc_clean / 100));
+            item.profit = item.finalQuote - (item.unit_cost * item.quantity);
+            item.margin = Math.round((item.profit / item.finalQuote) * 100);
+          }
+        }
+      });
+      document.getElementById('side-tick-6').classList.remove('opacity-0');
+      renderStep5Results();
+      alert("AI đã tính lại tham số theo chỉ đạo của Người duyệt cuối!");
+      document.getElementById('review-2-feedback-input').value = "";
+    }
+
+    function openHTMLPreviewModal() {
+      const html = generateHTMLDoc();
+      document.getElementById('html-preview-rendered-area').innerHTML = `<iframe srcdoc="${html.replace(/"/g, '&quot;')}" class="w-full h-[520px] bg-white rounded-2xl border border-[#F5D5DA]"></iframe>`;
+      document.getElementById('html-preview-modal').classList.remove('hidden');
+    }
+
+    function closeHTMLPreviewModal() { document.getElementById('html-preview-modal').classList.add('hidden'); }
+
+    function generateHTMLDoc() {
+      const rows = AppState.results || [];
+      const rev = rows.reduce((s, r) => s + r.finalQuote, 0);
+      return `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Báo Giá LIB Digital</title><style>body{font-family:sans-serif;margin:30px;color:#3D1420;background:#FDF4F5}table{width:100%;border-collapse:collapse;margin-top:20px}th,td{border:1px solid #F5D5DA;padding:8px;text-align:left}th{background:#E56988;color:white}</style></head><body><h2>CÔNG TY CỔ PHẦN CÔNG NGHỆ LIB DIGITAL</h2><p>Báo giá doanh nghiệp chuẩn mực đã được phê duyệt.</p><h3>Tổng doanh số: ${formatVND(rev)}</h3><table><tr><th>Mã YC</th><th>Khách Hàng</th><th>Sản Phẩm</th><th>SL</th><th>Giá Đề Xuất</th><th>Cấp Duyệt</th></tr>${rows.map(r=>`<tr><td>${r.request_id}</td><td>${r.customer_name}</td><td>${r.prod_std}</td><td>${r.quantity}</td><td>${formatVND(r.finalQuote)}</td><td>${r.app}</td></tr>`).join('')}</table></body></html>`;
+    }
+
+    function downloadHTMLReport() {
+      const html = generateHTMLDoc();
+      const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `LIB_Digital_BaoGia_${new Date().toISOString().slice(0,10)}.html`;
+      a.click();
+    }
+
+    function exportCSVData() {
+      const headers = ["Mã Yêu Cầu", "Khách Hàng", "Sản Phẩm", "Số Lượng", "Giá Đề Xuất", "Biên LN %"];
+      const rows = AppState.results.map(r => [r.request_id, `"${r.customer_name}"`, `"${r.prod_std}"`, r.quantity, r.finalQuote, r.margin]);
+      const csv = "\uFEFF" + [headers.join(","), ...rows.map(e => e.join(","))].join("\n");
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `LIB_Digital_BaoGia_${new Date().toISOString().slice(0,10)}.csv`;
+      a.click();
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      loadSample('valid');
+    });
+  </script>
+</body>
+</html>

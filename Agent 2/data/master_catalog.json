@@ -1,0 +1,145 @@
+{
+  "products": [
+    {
+      "sku": "MA-SRV-01",
+      "name": "Dell PowerEdge R750 Server",
+      "aliases": [
+        "dell r750",
+        "server dell r750",
+        "poweredge r750",
+        "dell server r750"
+      ],
+      "unit_cost": 75000000,
+      "unit_price": 98000000,
+      "stock_available": 12,
+      "lead_time_days": 3,
+      "min_margin_pct": 18
+    },
+    {
+      "sku": "MA-PC-02",
+      "name": "Dell OptiPlex 7090 MT Workstation",
+      "aliases": [
+        "dell opti 7090",
+        "dell 7090",
+        "optiplex 7090",
+        "may tinh dell 7090"
+      ],
+      "unit_cost": 16000000,
+      "unit_price": 22500000,
+      "stock_available": 45,
+      "lead_time_days": 2,
+      "min_margin_pct": 20
+    },
+    {
+      "sku": "MA-NET-03",
+      "name": "Cisco Catalyst 2960-X 24 Port Switch",
+      "aliases": [
+        "cisco 24p",
+        "switch cisco 24",
+        "catalyst 2960",
+        "cisco switch 24 port"
+      ],
+      "unit_cost": 21000000,
+      "unit_price": 28900000,
+      "stock_available": 18,
+      "lead_time_days": 2,
+      "min_margin_pct": 22
+    },
+    {
+      "sku": "MA-WIFI-04",
+      "name": "Aruba AP-515 Campus Access Point",
+      "aliases": [
+        "aruba ap 515",
+        "wifi aruba 515",
+        "aruba access point 515"
+      ],
+      "unit_cost": 8500000,
+      "unit_price": 12200000,
+      "stock_available": 30,
+      "lead_time_days": 1,
+      "min_margin_pct": 25
+    },
+    {
+      "sku": "MA-FW-05",
+      "name": "Fortinet FortiGate 80F Firewall",
+      "aliases": [
+        "fortigate 80f",
+        "tuong lua fortinet 80f",
+        "fortinet 80f",
+        "firewall fortigate 80f"
+      ],
+      "unit_cost": 28000000,
+      "unit_price": 38500000,
+      "stock_available": 5,
+      "lead_time_days": 4,
+      "min_margin_pct": 20
+    },
+    {
+      "sku": "MA-UPS-06",
+      "name": "APC Smart-UPS 3000VA LCD 230V",
+      "aliases": [
+        "apc 3000va",
+        "ups apc 3000",
+        "bo luu dien apc 3000va"
+      ],
+      "unit_cost": 24000000,
+      "unit_price": 33000000,
+      "stock_available": 8,
+      "lead_time_days": 3,
+      "min_margin_pct": 20
+    },
+    {
+      "sku": "MA-SRV-07",
+      "name": "Dịch vụ Triển khai & Cấu hình Hệ thống (Man-day)",
+      "aliases": [
+        "dich vu trien khai",
+        "cong trien khai",
+        "cau hinh he thong",
+        "service deployment"
+      ],
+      "unit_cost": 3000000,
+      "unit_price": 6000000,
+      "stock_available": 999,
+      "lead_time_days": 1,
+      "min_margin_pct": 45
+    }
+  ],
+  "approval_policy": {
+    "sales_rep_max_discount": 5.0,
+    "sales_manager_max_discount": 15.0,
+    "director_escalation_discount": 15.0,
+    "min_deal_gross_margin": 15.0
+  },
+  "required_keys": [
+    {
+      "key": "customer_name",
+      "label": "Tên khách hàng",
+      "aliases": [
+        "customer_name",
+        "khách hàng",
+        "tên khách hàng",
+        "ten_kh",
+        "ten_khach",
+        "customer",
+        "doanh nghiệp",
+        "đối tác",
+        "tên khách"
+      ]
+    },
+    {
+      "key": "product_items",
+      "label": "Hạng mục sản phẩm",
+      "aliases": [
+        "product_items",
+        "sản phẩm",
+        "thiết bị",
+        "san_pham",
+        "san_pham_yeu_cau",
+        "items",
+        "tên thiết bị",
+        "hàng hóa",
+        "thiet_bi"
+      ]
+    }
+  ]
+}
